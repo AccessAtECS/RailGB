@@ -51,7 +51,10 @@ $contents = json_decode($contents);
 		
 		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 		<script type="text/javascript">
-			function initialize() {
+			
+			function initialize(loc) {
+				
+				if(loc == null) loc = "52.84923, -2.032471";
 				
 				// Image for each pin
 				var image = '/railgb/img/pins/rail-red.png';
@@ -59,7 +62,7 @@ $contents = json_decode($contents);
 				// Fire up map
 				var mapDiv = document.getElementById('map-canvas');
 				var map = new google.maps.Map(mapDiv, {
-					center: new google.maps.LatLng(52.84923, -2.032471),
+					center: new google.maps.LatLng(loc),
 					zoom: 7,
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				});
@@ -104,6 +107,21 @@ $contents = json_decode($contents);
 								
 				// Clear "Loading" text here
 			}
+
+			
+			function search() {
+				var addressField = document.getElementById('search_address');
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode(
+					{'address': addressField.value}, 
+					function(results, status) { 
+						if (status == google.maps.GeocoderStatus.OK) { 
+							var loc = results[0].geometry.location;
+							initialize(loc);
+						}
+					}
+				);
+			};
 			
 			// When ready, fire up the google map. RDF loads when the map is ready.
 			$(function() {
@@ -156,6 +174,8 @@ $contents = json_decode($contents);
 						<label><input type="checkbox" name="station" id="filter-staff" value="staff" /> Staffed <img src="/railgb/img/fugue/user.png" alt="staffed" /></label><br />
 						<label><input type="checkbox" name="station" id="filter-ramp" value="ramp" /> Ramp <img src="/railgb/img/fugue/road.png" alt="ramp" /></label><br />
 					</form>
+					
+					<input type="text" id="search_address" value=""/> <button onclick="search();">Search</button>
 					
 					<div id="station" style="display:none">
 						<h4 id="station-name"></h4>
