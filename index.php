@@ -50,12 +50,12 @@
 				<div class="span3">
 					<h4>Select stations to show with:</h4>
 					<form>
-						<input type="checkbox" name="station" value="ramp" /> Ramp<br />
-						<input type="checkbox" name="station" value="staff" /> Staffed<br />
-						<input type="checkbox" name="station" value="ticketoffice" /> Ticket Office<br />
+						<input type="checkbox" name="station" value="ramp" /> Ramp <img src="/railgb/img/fugue/road.png" alt="ramp" /><br />
+						<input type="checkbox" name="station" value="staff" /> Staffed <img src="/railgb/img/fugue/user.png" alt="staffed" /><br />
+						<input type="checkbox" name="station" value="ticketoffice" /> Ticket Office <img src="/railgb/img/fugue/ticket-1.png" alt="ticket office" /><br />
 					</form>
 				</div>
-				<div class="span8">
+				<div class="span6">
 					<div id="map-canvas" style="width: 700px; height: 900px"></div>
 				</div>
 				</div>
