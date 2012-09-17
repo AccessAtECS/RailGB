@@ -15,9 +15,21 @@
 					zoom: 7,
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				});
+				
+				
+				$.getJSON("http://oad.rkbexplorer.com/sparql/?callback=?",
+					{
+						format: "json",
+						query: "PREFIX id: <http://oad.rkbexplorer.com/id/>	PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX owl: <http://www.w3.org/2002/07/owl#> PREFIX foaf: <http://xmlns.com/foaf/0.1/> PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> PREFIX rf: <http://ontologi.es/rail/vocab#facilities/> SELECT ?station ?name ?long ?lat ?staffing ?ramp ?ticket WHERE { ?station foaf:name ?name. ?station geo:lat ?lat. ?station geo:long ?long. }"},
+					function(data) {
+						console.log(data);
+						alert("got datas!");
+					});
 			}
 			
-			google.maps.event.addDomListener(window, 'load', initialize);
+			$(function() {
+				google.maps.event.addDomListener(window, 'load', initialize);
+			});
 		</script>
 	</head>
 	<body>
