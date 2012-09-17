@@ -29,12 +29,14 @@ WHERE
     ?station ?p3 ?ramp.
     ?ramp rdfs:label \"Ramp for Train Access\"@en.
   }
-} LIMIT 100";
-//echo "http://oad.rkbexplorer.com/sparql/?format=json&query=".urlencode(str_replace("\n", " ", $query));
+} LIMIT 200";
+
 $contents = file_get_contents("http://oad.rkbexplorer.com/sparql/?format=json&query=".urlencode(str_replace("\n", " ", $query)));
 $contents = json_decode($contents);
 
-?><!DOCTYPE html>
+?>
+
+<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<link href="/railgb/css/bootstrap.css" rel="stylesheet">
@@ -46,6 +48,10 @@ $contents = json_decode($contents);
 		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 		<script type="text/javascript">
 			function initialize() {
+				
+				// Image for each pin
+				var image = '/railgb/img/pins/rail-red.png';
+				
 				// Fire up map
 				var mapDiv = document.getElementById('map-canvas');
 				var map = new google.maps.Map(mapDiv, {
@@ -61,7 +67,9 @@ $contents = json_decode($contents);
 					markers.push(new google.maps.Marker({
 				    	position: new google.maps.LatLng(station.lat.value, station.long.value),
 				    	map: map,
-				    	title: station.name.value
+				    	title: station.name.value,
+				    	icon: image,
+				    	draggable: false
 				    }));
 				});
 								
@@ -78,7 +86,11 @@ $contents = json_decode($contents);
 			var stations = <?=json_encode($contents)?>;
 			var markers = new Array();
 		</script>
+		
 	</head>
+	
+	
+	
 	<body>
 		<div class="container" id="container">
 			<div class="page-header">
@@ -98,12 +110,15 @@ $contents = json_decode($contents);
 					<div id="map-canvas" style="width: 700px; height: 900px"></div>
 				</div>
 			</div>
-		</div>	
+		</div>
+		
 		<div class="container">
 			<footer>
 				<p class="pull-right muted"><a href="/railgb/about.php">About</a></p>
 				<p class="pull-left"><img src="/railgb/img/theme/uos.png" alt="University of Southampton"></p>
 			</footer>
 		</div>
+		
+		
 	</body>
 </html>
