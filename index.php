@@ -67,15 +67,14 @@ $contents = json_decode($contents);
 				// Add "Loading" text here.
 				
 				$.each(stations.results.bindings, function(i, station) {
-					//console.log(station.name.value);
 					
-					var ticketoffice = 'Not available';
-					var ramp = 'No';
-					var staffing = 'No staff available here';
+					var ticketoffice = {value: false, text: 'Not available'}
+					var staffing = {value: false, text: 'No staff available'}
+					var ramp = {value: false, text: 'No'}
 					
-					if(typeof station.ticket != 'undefined') ticketoffice = station.ticket.value;
-					if(typeof station.staffing != 'undefined') staffing = station.staffing.value;
-					if(typeof station.ramp != 'undefined') ramp = 'Yes';
+					if(typeof station.ticket != 'undefined' && station.ticket.value != "No") ticketoffice = {value: true, text: station.ticket.value}
+					if(typeof station.staffing != 'undefined' && station.staffing.value != "") staffing = {value: true, text: station.staffing.value}
+					if(typeof station.ramp != 'undefined') ramp = {value: true, text: 'Yes'}
 					
 					markers.push(new google.maps.Marker({
 						position: new google.maps.LatLng(station.lat.value, station.long.value),
@@ -84,16 +83,17 @@ $contents = json_decode($contents);
 						icon: image,
 						draggable: false,
 						railgb_ticketoffice: ticketoffice,
+						railgb_staffing: staffing,
 						railgb_ramp: ramp,
-						railgb_staffing: staffing
+						visible: true
 					}));
 					
 					// Marker display box
 					google.maps.event.addListener(markers[markers.length - 1], 'click', function(){
 						$("#station-name").html(this.title);
-						$("#station-staffing").html(this.railgb_staffing);
-						$("#station-ramp").html(this.railgb_ramp);
-						$("#station-ticketoffice").html(this.railgb_ticketoffice);
+						$("#station-ticketoffice").html(this.railgb_ticketoffice.text);
+						$("#station-staffing").html(this.railgb_staffing.text);
+						$("#station-ramp").html(this.railgb_ramp.text);
 						$("#station").show();
 					});
 				});
@@ -106,6 +106,19 @@ $contents = json_decode($contents);
 				google.maps.event.addDomListener(window, 'load', initialize);
 				
 				
+				
+				$("#filter-ticketoffice").click(function(){
+					var filterTicketOffices = $("#filter-ticketoffice").is(':checked');
+					
+					$.each(markers, function(i, station) {
+						if(filterTicketOffices == false) {
+							station.setVisible(true);
+						} else if(station.railgb_ticketoffice.value != filterTicketOffices) {
+							station.setVisible(false);
+						}
+					});
+					
+				});
 				
 			});
 			
@@ -127,9 +140,9 @@ $contents = json_decode($contents);
 				<div class="span3">
 					<h4>Select stations to show with:</h4>
 					<form>
-						<input type="checkbox" name="station" id="filter-ramp" value="ramp" /> Ramp <img src="/railgb/img/fugue/road.png" alt="ramp" /><br />
-						<input type="checkbox" name="station" id="filter-staff" value="staff" /> Staffed <img src="/railgb/img/fugue/user.png" alt="staffed" /><br />
 						<input type="checkbox" name="station" id="filter-ticketoffice" value="ticketoffice" /> Ticket Office <img src="/railgb/img/fugue/ticket-1.png" alt="ticket office" /><br />
+						<input type="checkbox" name="station" id="filter-staff" value="staff" /> Staffed <img src="/railgb/img/fugue/user.png" alt="staffed" /><br />
+						<input type="checkbox" name="station" id="filter-ramp" value="ramp" /> Ramp <img src="/railgb/img/fugue/road.png" alt="ramp" /><br />
 					</form>
 					
 					<div id="station" style="display:none">
