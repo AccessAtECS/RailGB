@@ -5,7 +5,7 @@
 		<link href="/railgb/css/bootstrap-responsive.css" rel="stylesheet">
 		<script type="text/javascript" src="/railgb/js/jquery-1.8.1.min.js"></script>
 		<script type="text/javascript" src="/railgb/js/bootstrap.min.js"></script>
-		<title>Google Maps V3 API Sample</title>
+		<title>RailGB - Accessible Rail Network Map</title>
 		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 		<script type="text/javascript">
 			function initialize() {
@@ -23,7 +23,7 @@
 	<body>
 		<div class="container">
 			<div class="page-header">
-					<h1>RailGB <small>Accessible Rail</small></h1>
+					<h1>RailGB <small>Accessible Rail Network Map</small></h1>
 				</div>
 			<div class="row-fluid">
 				<div class="span3">
