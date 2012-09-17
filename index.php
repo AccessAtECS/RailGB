@@ -1,8 +1,8 @@
 <?
 $query = "PREFIX id:   <http://oad.rkbexplorer.com/id/>
-PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdf:	 <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX owl:	 <http://www.w3.org/2002/07/owl#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX rf: <http://ontologi.es/rail/vocab#facilities/>
@@ -16,20 +16,20 @@ WHERE
   ?station ontologi:crs ?code.
   OPTIONAL 
   {
-    ?station ?p1 ?t.
-    ?t rf:availability ?ticket.
-    ?t rdfs:label \"Ticket Office\"@en.
+	?station ?p1 ?t.
+	?t rf:availability ?ticket.
+	?t rdfs:label \"Ticket Office\"@en.
   }
   OPTIONAL
   {
-    ?station ?p2 ?s.
-    ?s rf:availability ?staffing.
-    ?s rdfs:label \"Staffing\"@en.
+	?station ?p2 ?s.
+	?s rf:availability ?staffing.
+	?s rdfs:label \"Staffing\"@en.
   }
   OPTIONAL
   {
-    ?station ?p3 ?ramp.
-    ?ramp rdfs:label \"Ramp for Train Access\"@en.
+	?station ?p3 ?ramp.
+	?ramp rdfs:label \"Ramp for Train Access\"@en.
   }
 } LIMIT 300";
 
@@ -40,12 +40,15 @@ $contents = json_decode($contents);
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<link rel="icon" href="/railgb/img/theme/favicon.png" type="image/x-icon">
 		<link href="/railgb/css/bootstrap.css" rel="stylesheet">
 		<link href="/railgb/css/bootstrap-responsive.css" rel="stylesheet">
 		<link href="/railgb/css/railgb.css" rel="stylesheet">
 		<script type="text/javascript" src="/railgb/js/jquery-1.8.1.min.js"></script>
 		<script type="text/javascript" src="/railgb/js/bootstrap.min.js"></script>
+		
 		<title>RailGB - Accessible Rail Network Map</title>
+		
 		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 		<script type="text/javascript">
 			function initialize() {
@@ -65,13 +68,34 @@ $contents = json_decode($contents);
 				
 				$.each(stations.results.bindings, function(i, station) {
 					//console.log(station.name.value);
+					
+					var ticketoffice = 'Not available';
+					var ramp = 'No';
+					var staffing = 'No staff available here';
+					
+					if(typeof station.ticket != 'undefined') ticketoffice = station.ticket.value;
+					if(typeof station.staffing != 'undefined') staffing = station.staffing.value;
+					if(typeof station.ramp != 'undefined') ramp = 'Yes';
+					
 					markers.push(new google.maps.Marker({
-				    	position: new google.maps.LatLng(station.lat.value, station.long.value),
-				    	map: map,
-				    	title: station.name.value,
-				    	icon: image,
-				    	draggable: false
-				    }));
+						position: new google.maps.LatLng(station.lat.value, station.long.value),
+						map: map,
+						title: station.name.value,
+						icon: image,
+						draggable: false,
+						railgb_ticketoffice: ticketoffice,
+						railgb_ramp: ramp,
+						railgb_staffing: staffing
+					}));
+					
+					// Marker display box
+					google.maps.event.addListener(markers[markers.length - 1], 'click', function(){
+						$("#station-name").html(this.title);
+						$("#station-staffing").html(this.railgb_staffing);
+						$("#station-ramp").html(this.railgb_ramp);
+						$("#station-ticketoffice").html(this.railgb_ticketoffice);
+						$("#station").show();
+					});
 				});
 								
 				// Clear "Loading" text here
@@ -80,7 +104,8 @@ $contents = json_decode($contents);
 			// When ready, fire up the google map. RDF loads when the map is ready.
 			$(function() {
 				google.maps.event.addDomListener(window, 'load', initialize);
-				//console.log(localData);
+				
+				
 				
 			});
 			
@@ -102,10 +127,19 @@ $contents = json_decode($contents);
 				<div class="span3">
 					<h4>Select stations to show with:</h4>
 					<form>
-						<input type="checkbox" name="station" value="ramp" /> Ramp <img src="/railgb/img/fugue/road.png" alt="ramp" /><br />
-						<input type="checkbox" name="station" value="staff" /> Staffed <img src="/railgb/img/fugue/user.png" alt="staffed" /><br />
-						<input type="checkbox" name="station" value="ticketoffice" /> Ticket Office <img src="/railgb/img/fugue/ticket-1.png" alt="ticket office" /><br />
+						<input type="checkbox" name="station" id="filter-ramp" value="ramp" /> Ramp <img src="/railgb/img/fugue/road.png" alt="ramp" /><br />
+						<input type="checkbox" name="station" id="filter-staff" value="staff" /> Staffed <img src="/railgb/img/fugue/user.png" alt="staffed" /><br />
+						<input type="checkbox" name="station" id="filter-ticketoffice" value="ticketoffice" /> Ticket Office <img src="/railgb/img/fugue/ticket-1.png" alt="ticket office" /><br />
 					</form>
+					
+					<div id="station" style="display:none">
+						<h4 id="station-name"></h4>
+						<div id="station-innerticket">
+							<p><b>Ticket Office:</b> <span id="station-ticketoffice"></span></p>
+							<p><b>Staffing:</b> <span id="station-staffing"></span></p>
+							<p><b>Ramp:</b> <span id="station-ramp"></span></p>
+						</div>
+					</div>
 				</div>
 				<div class="span8 offset1">
 					<div id="map-canvas" style="width: 700px; height: 900px"></div>
