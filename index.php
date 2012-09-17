@@ -3,6 +3,7 @@
 	<head>
 		<link href="/railgb/css/bootstrap.css" rel="stylesheet">
 		<link href="/railgb/css/bootstrap-responsive.css" rel="stylesheet">
+		<link href="/railgb/css/railgb.css" rel="stylesheet">
 		<script type="text/javascript" src="/railgb/js/jquery-1.8.1.min.js"></script>
 		<script type="text/javascript" src="/railgb/js/bootstrap.min.js"></script>
 		<title>RailGB - Accessible Rail Network Map</title>
@@ -27,7 +28,7 @@
 					});
 			}
 			
-			$(function() {
+			$(function() {	
 				google.maps.event.addDomListener(window, 'load', initialize);
 			});
 		</script>
@@ -51,14 +52,12 @@
 					<div id="map-canvas" style="width: 700px; height: 900px"></div>
 				</div>
 				</div>
-				
+		</div>	
 		<div class="container">
 			<footer>
-				<p class="pull-right span4 muted"><a href="about.php">About</a></p>
-				<p class="pull-left"><img src="/img/theme/uos.png" alt="University of Southampton"></p>
+				<p class="pull-right muted"><a href="/railgb/about.php">About</a></p>
+				<p class="pull-left"><img src="/railgb/img/theme/uos.png" alt="University of Southampton"></p>
 			</footer>
-		</div>
 		</div>
 	</body>
 </html>
-​
