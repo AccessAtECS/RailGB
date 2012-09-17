@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Inconsolata);
+
 body {
 	background: #EEE url('/railgb/img/theme/background.png') top repeat-x;
 	font-size: 13px;
@@ -34,18 +36,29 @@ h1 {
 }
 
 #station {
-	border: 2px solid gray;
-	border-radius: 4px;
+	border: 1px solid gray;
+	border-radius: 6px;
+	font-family: Inconsolata, monospace;
+	background: #DEE2CB;
+	max-width: 330px;
+	box-shadow: 1px 1px 8px #575757
 }
 
 #station-name {
 	background: -webkit-linear-gradient(#ff8d00 0%, #ffcf86 100%);
 	margin: 0 0 5px 0;
 	padding: 5px 10px;
-	border-top-left-radius: 2px;
-	border-top-right-radius: 2px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 }
 
 #station-innerticket {
 	padding: 0 10px;
+}
+
+#station-footer {
+	background: -webkit-linear-gradient(#ff8d00 0%, #ffcf86 100%);
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	padding: 5px 0 6px 7px;
 }

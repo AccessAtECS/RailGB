@@ -31,7 +31,7 @@ WHERE
 	?station ?p3 ?ramp.
 	?ramp rdfs:label \"Ramp for Train Access\"@en.
   }
-} LIMIT 300";
+}";
 
 $contents = file_get_contents("http://oad.rkbexplorer.com/sparql/?format=json&query=".urlencode(str_replace("\n", " ", $query)));
 $contents = json_decode($contents);
@@ -68,13 +68,17 @@ $contents = json_decode($contents);
 				
 				$.each(stations.results.bindings, function(i, station) {
 					
-					var ticketoffice = {value: false, text: 'Not available'}
-					var staffing = {value: false, text: 'No staff available'}
-					var ramp = {value: false, text: 'No'}
+					var ticketoffice = {value: false, text: 'Not available'};
+					var staffing = {value: false, text: 'No staff available'};
+					var ramp = {value: false, text: 'No'};
 					
-					if(typeof station.ticket != 'undefined' && station.ticket.value != "No") ticketoffice = {value: true, text: station.ticket.value}
-					if(typeof station.staffing != 'undefined' && station.staffing.value != "") staffing = {value: true, text: station.staffing.value}
-					if(typeof station.ramp != 'undefined') ramp = {value: true, text: 'Yes'}
+					station.staffing.value = $.trim(station.staffing.value);
+					
+					if(typeof station.ticket != 'undefined' && station.ticket.value != "No") ticketoffice = {value: true, text: station.ticket.value};
+					
+					if(typeof station.staffing != 'undefined' && station.staffing.value.length > 0) staffing = {value: true, text: station.staffing.value};
+					
+					if(typeof station.ramp != 'undefined' && typeof station.ramp.value != 'undefined') ramp = {value: true, text: 'Yes'};
 					
 					markers.push(new google.maps.Marker({
 						position: new google.maps.LatLng(station.lat.value, station.long.value),
@@ -107,15 +111,23 @@ $contents = json_decode($contents);
 				
 				
 				
-				$("#filter-ticketoffice").click(function(){
+				$("input[type='checkbox']").click(function() {
 					var filterTicketOffices = $("#filter-ticketoffice").is(':checked');
+					var filterStaffing = $("#filter-staff").is(':checked');
+					var filterRamp = $("#filter-ramp").is(':checked');
 					
 					$.each(markers, function(i, station) {
-						if(filterTicketOffices == false) {
-							station.setVisible(true);
-						} else if(station.railgb_ticketoffice.value != filterTicketOffices) {
+						station.setVisible(true);
+						
+						if(filterTicketOffices == true && station.railgb_ticketoffice.value == false) station.setVisible(false);
+						if(filterStaffing == true && station.railgb_staffing.value == false) {
 							station.setVisible(false);
-						}
+							
+						} 
+						if(filterRamp == true && station.railgb_ramp.value == false) {
+							station.setVisible(false);
+							console.log("Hiding "+station.title+" because it has no ranmp!");
+						} 
 					});
 					
 				});
@@ -137,12 +149,12 @@ $contents = json_decode($contents);
 				</div>
 			<div class="row-fluid">
 				
-				<div class="span3">
+				<div class="span4">
 					<h4>Select stations to show with:</h4>
 					<form>
-						<input type="checkbox" name="station" id="filter-ticketoffice" value="ticketoffice" /> Ticket Office <img src="/railgb/img/fugue/ticket-1.png" alt="ticket office" /><br />
-						<input type="checkbox" name="station" id="filter-staff" value="staff" /> Staffed <img src="/railgb/img/fugue/user.png" alt="staffed" /><br />
-						<input type="checkbox" name="station" id="filter-ramp" value="ramp" /> Ramp <img src="/railgb/img/fugue/road.png" alt="ramp" /><br />
+						<label><input type="checkbox" name="station" id="filter-ticketoffice" value="ticketoffice" /> Ticket Office <img src="/railgb/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
+						<label><input type="checkbox" name="station" id="filter-staff" value="staff" /> Staffed <img src="/railgb/img/fugue/user.png" alt="staffed" /></label><br />
+						<label><input type="checkbox" name="station" id="filter-ramp" value="ramp" /> Ramp <img src="/railgb/img/fugue/road.png" alt="ramp" /></label><br />
 					</form>
 					
 					<div id="station" style="display:none">
@@ -152,9 +164,10 @@ $contents = json_decode($contents);
 							<p><b>Staffing:</b> <span id="station-staffing"></span></p>
 							<p><b>Ramp:</b> <span id="station-ramp"></span></p>
 						</div>
+						<div id="station-footer"><img src='/railgb/img/theme/ticket-logo.png' alt='National Rail' /></div>
 					</div>
 				</div>
-				<div class="span8 offset1">
+				<div class="span8">
 					<div id="map-canvas" style="width: 700px; height: 900px"></div>
 				</div>
 			</div>
