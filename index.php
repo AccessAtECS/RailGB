@@ -38,14 +38,19 @@
 					<h1>RailGB <small>Accessible Rail Network Map</small></h1>
 				</div>
 			<div class="row-fluid">
+				
 				<div class="span3">
-					Sidebar!
+					<h4>Select stations to show with:</h4>
+					<form>
+						<input type="checkbox" name="station" value="ramp" /> Ramp<br />
+						<input type="checkbox" name="station" value="staff" /> Staffed<br />
+						<input type="checkbox" name="station" value="ticketoffice" /> Ticket Office<br />
+					</form>
 				</div>
 				<div class="span8">
 					<div id="map-canvas" style="width: 700px; height: 900px"></div>
 				</div>
 				</div>
-			
 		</div>
 	</body>
 </html>
