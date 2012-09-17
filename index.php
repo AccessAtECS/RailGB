@@ -21,7 +21,7 @@
 		</script>
 	</head>
 	<body>
-		<div class="container">
+		<div class="container" id="container">
 			<div class="page-header">
 					<h1>RailGB <small>Accessible Rail Network Map</small></h1>
 				</div>
@@ -39,6 +39,13 @@
 					<div id="map-canvas" style="width: 700px; height: 900px"></div>
 				</div>
 				</div>
+				
+		<div class="container">
+			<footer>
+				<p class="pull-right span4 muted"><a href="about.php">About</a></p>
+				<p class="pull-left"><img src="/img/theme/uos.png" alt="University of Southampton"></p>
+			</footer>
+		</div>
 		</div>
 	</body>
 </html>
