@@ -31,7 +31,7 @@ WHERE
 	?station ?p3 ?ramp.
 	?ramp rdfs:label \"Ramp for Train Access\"@en.
   }
-} LIMIT 200";
+}";
 
 $contents = file_get_contents("http://oad.rkbexplorer.com/sparql/?format=json&query=".urlencode(str_replace("\n", " ", $query)));
 $contents = json_decode($contents);
