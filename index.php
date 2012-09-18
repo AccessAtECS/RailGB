@@ -71,7 +71,7 @@ $contents = json_decode($contents);
 				// Fire up map
 				var mapDiv = document.getElementById('map-canvas');
 				map = new google.maps.Map(mapDiv, {
-					center: new google.maps.LatLng(52.84923, -2.032471),
+					center: new google.maps.LatLng(53.000000, -2.000000),
 					zoom: 7,
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				});
@@ -115,7 +115,7 @@ $contents = json_decode($contents);
 					});
 				});
 				
-				$("#total_span").text(count+" stations in total.");			
+				$("#total_span").text(count+" stations in total");			
 				// Clear "Loading" text here
 			}
 			
@@ -292,11 +292,12 @@ $contents = json_decode($contents);
 	<body>
 		<div class="container" id="container">
 			<div class="page-header">
-					<h1>RailGB <small>Accessible Rail Network Map</small></h1>
-				</div>
+				<h1>RailGB <small>Accessible Rail Network Map</small></h1>
+			</div>
+			
 			<div class="row-fluid">
 				<div class="span8">
-					<div id="map-canvas" style="width: 700px; height: 900px"></div>
+					<div id="map-canvas"></div>
 				</div>
 				<div class="span4">
 					<div class="pull-right"><span class="badge badge-success" id="total_span"></span></div>
@@ -308,7 +309,7 @@ $contents = json_decode($contents);
 							<div class="control-group">
 								<label for="address" class="control-label"><b>Location</b></label>
 								<div class="controls">
-    								<input type="text" name="address" id="address" class="input-long" placeholder="Please Input the Postcode"/>
+    								<input type="text" name="address" id="address" class="input-long" placeholder="Town or Postcode"/>
     							</div>
     							<label for="radius" class="control-label"><b>Search Radius</b></label>
     							<div class="controls">
@@ -321,15 +322,19 @@ $contents = json_decode($contents);
 										<option value="100">100 miles</option>
     								</select>
     							</div>
-								<label>Select stations to show with:</label>
+    							
+    							<label>Select stations to show with:</label>
 								<div class="controls">
 									<label><input type="checkbox" name="station" id="filter-ticketoffice" value="ticketoffice" /> Ticket Office <img src="img/fugue/ticket-1.png" alt="ticket office" /></label><br />
 									<label><input type="checkbox" name="station" id="filter-staff" value="staff" /> Staffed <img src="img/fugue/user.png" alt="staffed" /></label><br />
 									<label><input type="checkbox" name="station" id="filter-ramp" value="ramp" /> Ramp <img src="img/fugue/road.png" alt="ramp" /></label><br />
 								</div>
+							</div>
 						</form>
 						<button class="btn btn-primary" id="search_btn">Search</button>
 					</div>
+					<br/>
+					<br/>
 					<div id="station" style="display:none">
 						<h4 id="station-name"></h4>
 						<div id="station-innerticket">
@@ -342,14 +347,14 @@ $contents = json_decode($contents);
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="container">
 			<footer>
 				<p class="pull-right muted"><a href="about.php">About</a></p>
 				<p class="pull-left"><img src="img/theme/uos.png" alt="University of Southampton"></p>
 			</footer>
 		</div>
-		
+
 		
 	</body>
 </html>
