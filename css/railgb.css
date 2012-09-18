@@ -1,7 +1,7 @@
 @import url(http://fonts.googleapis.com/css?family=Inconsolata);
 
 body {
-	background: #EEE url('/railgb/img/theme/background.png') top repeat-x;
+	background: #EEE url('../img/theme/background.png') top repeat-x;
 	font-size: 13px;
 	line-height: 18px;
 }
