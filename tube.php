@@ -21,7 +21,7 @@ SELECT Distinct ?station ?name ?long ?lat ?hasLift
     ?location fb:location.geocode.longitude ?long.
     ?location fb:location.geocode.latitude ?lat.
     FILTER ( lang(?name) = 'en' )
-} Limit 20";
+}";
 
 $contents = file_get_contents("http://oad.rkbexplorer.com/sparql/?format=json&query=".urlencode(str_replace("\n", " ", $query)));
 $contents = json_decode($contents);
