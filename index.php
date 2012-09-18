@@ -56,6 +56,7 @@ $contents = json_decode($contents);
 			var currentMarker = null;
 			var stationsDisplayed = new Array();
 			var radius = 16000; //10 miles
+			var initialLatLong = new google.maps.LatLng(53.000000, -2.000000);
 			
 			if (typeof(Number.prototype.toRad) === "undefined") {
   				Number.prototype.toRad = function() {
@@ -71,7 +72,7 @@ $contents = json_decode($contents);
 				// Fire up map
 				var mapDiv = document.getElementById('map-canvas');
 				map = new google.maps.Map(mapDiv, {
-					center: new google.maps.LatLng(52.84923, -2.032471),
+					center: initialLatLong,
 					zoom: 7,
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				});
@@ -114,8 +115,10 @@ $contents = json_decode($contents);
 						$("#station").show();
 					});
 				});
-				
-				$("#total_span").text(count+" stations in total.");			
+				$("#alert").html(
+						'<div class="alert alert-success">Showing '+count+' stations.</div>'
+					).show();
+						
 				// Clear "Loading" text here
 			}
 			
@@ -123,14 +126,13 @@ $contents = json_decode($contents);
 			{
 				if(stationsDisplayed.length ==0)
 				{
-					$("#alert").html('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert">x</button>'+
-						'No station has been found.</div>');
+					$("#alert").html('<div class="alert alert-warning">'+
+						'No stations have been found. Try a different search.</div>');
 				}
 				else
 				{
 					$("#alert").html(
-						'<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">x</button>'+
-						stationsDisplayed.length+' stations have been found.</div>'
+						'<div class="alert alert-success">Showing '+stationsDisplayed.length+' of '+markers.length+' stations matching your search.</div>'
 					);
 				}
 				$("#alert").show();
@@ -201,7 +203,7 @@ $contents = json_decode($contents);
 			$(function() {
 				google.maps.event.addDomListener(window, 'load', initialize);
 				
-				$("input[type='checkbox']").click(function() {
+				$("input[type='checkbox']").change(function() {
 					stationsDisplayed = new Array();
 					$.each(markers, function(i, station) {
 						if(currentMarker != null)
@@ -217,9 +219,21 @@ $contents = json_decode($contents);
 					showStationsCount();
 				});
 				
+				$("#clear_btn").click(function() {
+					if(circle != null) circle.setMap(null);
+					if(currentMarker != null) currentMarker.setMap(null);
+					
+					map.setCenter(initialLatLong);
+					map.setZoom(7);
+					
+					$.each(markers, function(i, marker) {
+						marker.setVisible(true);
+					});
+					
+				});
+				
 				//search nearby
 				$("#search_btn").click(function(){
-					console.log("click");
 					var address = $("#address").val();
 					radius = parseInt($("#radius").val())*1600;
 					stationsDisplayed = new Array();
@@ -230,6 +244,8 @@ $contents = json_decode($contents);
         					{'address': address },
             				function(data, status) 
             				{ 
+            					console.log("status coming up!");
+            					console.log(status);
             					var lat = data[0].geometry.location.Xa;
 								var lng = data[0].geometry.location.Ya;
 								var latlng = new google.maps.LatLng(lat,lng,true);
@@ -241,7 +257,10 @@ $contents = json_decode($contents);
         							circle.setMap(null);
     							}
     							
-    							var marker = new google.maps.Marker({
+    							// Remove old marker
+    							if(currentMarker != null) currentMarker.setMap(null);
+    							
+    							currentMarker = new google.maps.Marker({
    										map: map,
    										position: latlng,
     									draggable: false
@@ -257,19 +276,20 @@ $contents = json_decode($contents);
        								map: map
 								});
 								
-								circle.bindTo('center', marker, 'position');
-								currentMarker = marker;
+								circle.bindTo('center', currentMarker, 'position');
 								
 								map.setCenter(currentMarker.getPosition());
 								$.each(markers, function(i, station) {
 									checkDistance(station);
 								});
 								//set focus
+								/*
 								var latlngbounds = new google.maps.LatLngBounds( );
 								for ( var i = 0; i < stationsDisplayed.length; i++ ) {
   									latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
 								}
-								map.fitBounds( latlngbounds );
+								*/
+								map.fitBounds( circle.getBounds() );
 								showStationsCount();
 							});
 					}
@@ -292,23 +312,21 @@ $contents = json_decode($contents);
 	<body>
 		<div class="container" id="container">
 			<div class="page-header">
-					<h1>RailGB <small>Accessible Rail Network Map</small></h1>
-				</div>
+				<h1>RailGB <small>Accessible Rail Network Map</small></h1>
+			</div>
+			
 			<div class="row-fluid">
 				<div class="span8">
-					<div id="map-canvas" style="width: 700px; height: 900px"></div>
+					<div id="map-canvas"></div>
 				</div>
 				<div class="span4">
-					<div class="pull-right"><span class="badge badge-success" id="total_span"></span></div>
-					<br/>
-					<br/>
 					<div id="alert" style="display:none"></div>
 					<div>
-						<form class="form-search">
+						<form class="form-search" onsubmit="return false">
 							<div class="control-group">
 								<label for="address" class="control-label"><b>Location</b></label>
 								<div class="controls">
-    								<input type="text" name="address" id="address" class="input-long" placeholder="Please Input the Postcode"/>
+    								<input type="text" name="address" id="address" class="input-long" placeholder="Town or Postcode"/>
     							</div>
     							<label for="radius" class="control-label"><b>Search Radius</b></label>
     							<div class="controls">
@@ -321,15 +339,20 @@ $contents = json_decode($contents);
 										<option value="100">100 miles</option>
     								</select>
     							</div>
-								<label>Select stations to show with:</label>
+    							
+    							<label>Select stations to show with:</label>
 								<div class="controls">
 									<label><input type="checkbox" name="station" id="filter-ticketoffice" value="ticketoffice" /> Ticket Office <img src="img/fugue/ticket-1.png" alt="ticket office" /></label><br />
 									<label><input type="checkbox" name="station" id="filter-staff" value="staff" /> Staffed <img src="img/fugue/user.png" alt="staffed" /></label><br />
 									<label><input type="checkbox" name="station" id="filter-ramp" value="ramp" /> Ramp <img src="img/fugue/road.png" alt="ramp" /></label><br />
 								</div>
+								<!-- Removed random div here....it fixed the search function, but not sure why! -->
 						</form>
-						<button class="btn btn-primary" id="search_btn">Search</button>
+						<button class="btn btn-primary" id="search_btn" type="submit">Search</button>
+						<button class="btn pull-right" id="clear_btn">Clear Results</button>
 					</div>
+					<br/>
+					<br/>
 					<div id="station" style="display:none">
 						<h4 id="station-name"></h4>
 						<div id="station-innerticket">
@@ -342,14 +365,14 @@ $contents = json_decode($contents);
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="container">
 			<footer>
 				<p class="pull-right muted"><a href="about.php">About</a></p>
 				<p class="pull-left"><img src="img/theme/uos.png" alt="University of Southampton"></p>
 			</footer>
 		</div>
-		
+
 		
 	</body>
 </html>

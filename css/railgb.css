@@ -54,6 +54,7 @@ h1 {
 
 #station-innerticket {
 	padding: 0 10px;
+	min-height: 110px;	
 }
 
 #station-footer {
@@ -61,4 +62,13 @@ h1 {
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
 	padding: 5px 0 6px 7px;
+}
+
+#map-canvas {
+	width: 700px; 
+	height: 700px;
+}
+
+#map-canvas img {
+	max-width: none;
 }
