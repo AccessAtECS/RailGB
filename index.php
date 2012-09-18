@@ -33,8 +33,9 @@ WHERE
   }
 }";
 
-$contents = file_get_contents("http://oad.rkbexplorer.com/sparql/?format=json&query=".urlencode(str_replace("\n", " ", $query)));
-$contents = json_decode($contents);
+//$contents = file_get_contents("http://oad.rkbexplorer.com/sparql/?format=json&query=".urlencode(str_replace("\n", " ", $query)));
+//$contents = json_decode($contents);
+$contents = "lol";
 ?>
 
 <!DOCTYPE html>
@@ -79,45 +80,52 @@ $contents = json_decode($contents);
 				
 				// Add "Loading" text here.
 				var count = 0;
-				$.each(stations.results.bindings, function(i, station) {
+				
+				$.getJSON("/railgb/ajax/rail.php", function(stations) {
+					$.each(stations.results.bindings, function(i, station) {
 					
-					var ticketoffice = {value: false, text: 'Not available'};
-					var staffing = {value: false, text: 'No staff available'};
-					var ramp = {value: false, text: 'No'};
-					
-					station.staffing.value = $.trim(station.staffing.value);
-					
-					if(typeof station.ticket != 'undefined' && station.ticket.value != "No") ticketoffice = {value: true, text: station.ticket.value};
-					
-					if(typeof station.staffing != 'undefined' && station.staffing.value.length > 0) staffing = {value: true, text: station.staffing.value};
-					
-					if(typeof station.ramp != 'undefined' && typeof station.ramp.value != 'undefined') ramp = {value: true, text: 'Yes'};
-					
-					markers.push(new google.maps.Marker({
-						position: new google.maps.LatLng(station.lat.value, station.long.value),
-						map: map,
-						title: station.name.value,
-						icon: image,
-						draggable: false,
-						railgb_ticketoffice: ticketoffice,
-						railgb_staffing: staffing,
-						railgb_ramp: ramp,
-						visible: true
-					}));
-					
-					count++;
-					// Marker display box
-					google.maps.event.addListener(markers[markers.length - 1], 'click', function(){
-						$("#station-name").html(this.title);
-						$("#station-ticketoffice").html(this.railgb_ticketoffice.text);
-						$("#station-staffing").html(this.railgb_staffing.text);
-						$("#station-ramp").html(this.railgb_ramp.text);
-						$("#station").show();
+						var ticketoffice = {value: false, text: 'Not available'};
+						var staffing = {value: false, text: 'No staff available'};
+						var ramp = {value: false, text: 'No'};
+						
+						station.staffing.value = $.trim(station.staffing.value);
+						
+						if(typeof station.ticket != 'undefined' && station.ticket.value != "No") ticketoffice = {value: true, text: station.ticket.value};
+						
+						if(typeof station.staffing != 'undefined' && station.staffing.value.length > 0) staffing = {value: true, text: station.staffing.value};
+						
+						if(typeof station.ramp != 'undefined' && typeof station.ramp.value != 'undefined') ramp = {value: true, text: 'Yes'};
+						
+						markers.push(new google.maps.Marker({
+							position: new google.maps.LatLng(station.lat.value, station.long.value),
+							map: map,
+							title: station.name.value,
+							icon: image,
+							draggable: false,
+							railgb_ticketoffice: ticketoffice,
+							railgb_staffing: staffing,
+							railgb_ramp: ramp,
+							visible: true
+						}));
+						
+						count++;
+						// Marker display box
+						google.maps.event.addListener(markers[markers.length - 1], 'click', function(){
+							$("#station-name").html(this.title);
+							$("#station-ticketoffice").html(this.railgb_ticketoffice.text);
+							$("#station-staffing").html(this.railgb_staffing.text);
+							$("#station-ramp").html(this.railgb_ramp.text);
+							$("#station").show();
+						});
+						
+						$("#alert").html(
+							'<div class="alert alert-success">Showing '+count+' stations.</div>'
+						).show();
 					});
-				});
-				$("#alert").html(
-						'<div class="alert alert-success">Showing '+count+' stations.</div>'
-					).show();
+				})
+				
+				
+				
 						
 				// Clear "Loading" text here
 			}
@@ -301,7 +309,6 @@ $contents = json_decode($contents);
 				});
 			});
 			
-			var stations = <?php echo json_encode($contents); ?>;
 			var markers = new Array();
 		</script>
 		
@@ -320,7 +327,7 @@ $contents = json_decode($contents);
 					<div id="map-canvas"></div>
 				</div>
 				<div class="span4">
-					<div id="alert" style="display:none"></div>
+					<div id="alert"><div class="alert alert-info">Loading&hellip;</div></div>
 					<div>
 						<form class="form-search" onsubmit="return false">
 							<div class="control-group">
@@ -368,7 +375,7 @@ $contents = json_decode($contents);
 
 		<div class="container">
 			<footer>
-				<p class="pull-right muted"><a href="about.php">About</a></p>
+				<p class="pull-right muted"><a href="/railgb/about">About</a></p>
 				<p class="pull-left"><img src="img/theme/uos.png" alt="University of Southampton"></p>
 			</footer>
 		</div>

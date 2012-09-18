@@ -23,21 +23,22 @@ SELECT Distinct ?station ?name ?long ?lat ?hasLift
     FILTER ( lang(?name) = 'en' )
 }";
 
-$contents = file_get_contents("http://oad.rkbexplorer.com/sparql/?format=json&query=".urlencode(str_replace("\n", " ", $query)));
-$contents = json_decode($contents);
+//$contents = file_get_contents("http://oad.rkbexplorer.com/sparql/?format=json&query=".urlencode(str_replace("\n", " ", $query)));
+//$contents = json_decode($contents);
+$contents = "lol";
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<link rel="icon" href="img/theme/favicon.png" type="image/x-icon">
-		<link href="css/bootstrap.css" rel="stylesheet">
-		<link href="css/bootstrap-responsive.css" rel="stylesheet">
-		<link href="css/railgb.css" rel="stylesheet">
+		<link rel="icon" href="/railgb/img/theme/favicon.png" type="image/x-icon">
+		<link href="/railgb/css/bootstrap.css" rel="stylesheet">
+		<link href="/railgb/css/bootstrap-responsive.css" rel="stylesheet">
+		<link href="/railgb/css/railgb.css" rel="stylesheet">
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/railgb/js/bootstrap.min.js"></script>
 		
-		<title>Tube London - Accessible London Tube Ma</title>
+		<title>Tube London - Accessible London Tube Map</title>
 		
 		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 		<script type="text/javascript">
@@ -46,17 +47,56 @@ $contents = json_decode($contents);
 			var currentMarker = null;
 			var stationsDisplayed = new Array();
 			var radius = 1600.0; //1 miles
+			var initialLatLong = new google.maps.LatLng(51.508129, -0.128005);
 			
 			if (typeof(Number.prototype.toRad) === "undefined") {
   				Number.prototype.toRad = function() {
     				return this * Math.PI / 180;
   				}
 			}
+			
+			function fireUpStations(stations) {
+				var count = 0;
+				$.each(stations.results.bindings, function(i, station) {
+						
+						var hasLift = {value: false, text: 'Not available'};
+						
+						
+						if(station.hasLift.value === "true") {
+							hasLift = {value:true,text:'Lift available'};
+							image = '/railgb/img/theme/wheelchair-ok.png';
+						} else {
+							image = '/railgb/img/theme/wheelchair-not-ok.png';
+						}
+						
+						//console.log("hasLift",station.hasLift.value);
+						markers.push(new google.maps.Marker({
+							position: new google.maps.LatLng(station.lat.value, station.long.value),
+							map: map,
+							title: station.name.value.replace(" tube station", ""),
+							icon: image,
+							draggable: false,
+							lift: hasLift,
+							visible: true
+						}));
+						
+						count++;
+						// Marker display box
+						google.maps.event.addListener(markers[markers.length - 1], 'click', function(){
+							$("#station-name").html(this.title);
+							$("#station-lift").html(this.lift.text);
+							$("#station").show();
+						});
+					});
+					$("#alert").html(
+						'<div class="alert alert-success">Showing '+count+' stations.</div>'
+					).show();
+			}
 
 			function initialize() {
 				
 				// Image for each pin
-				var image = 'img/pins/rail-red.png';
+				var image = '/railgb/img/theme/wheelchair-not-ok.png';
 				
 				// Fire up map
 				var mapDiv = document.getElementById('map-canvas');
@@ -67,38 +107,19 @@ $contents = json_decode($contents);
 				});
 				
 				// Add "Loading" text here.
-				var count = 0;
-				//console.log(stations);
-				$.each(stations.results.bindings, function(i, station) {
-					
-					var hasLift = {value: false, text: 'Not available'};
-					
-					if(station.hasLift.value === "true")
-					{
-						hasLift = {value:true,text:'Lift available'}
-					};
-					
-					//console.log("hasLift",station.hasLift.value);
-					markers.push(new google.maps.Marker({
-						position: new google.maps.LatLng(station.lat.value, station.long.value),
-						map: map,
-						title: station.name.value,
-						icon: image,
-						draggable: false,
-						lift: hasLift,
-						visible: true
-					}));
-					
-					count++;
-					// Marker display box
-					google.maps.event.addListener(markers[markers.length - 1], 'click', function(){
-						$("#station-name").html(this.title);
-						$("#station-lift").html(this.lift.text);
-						$("#station").show();
-					});
-				});
 				
-				$("#total_span").text(count+" stations in total.");			
+				//console.log(stations);
+				
+				
+				//if(typeof sessionStorage.tube == "undefined") {
+					$.getJSON("/railgb/ajax/tube.php", function(stations) {
+						fireUpStations(stations);
+						//sessionStorage.tube = stations;
+					});
+				//} else {
+				//	fireUpStations(sessionStorage.tube);
+				//}
+				
 				// Clear "Loading" text here
 			}
 			
@@ -106,14 +127,12 @@ $contents = json_decode($contents);
 			{
 				if(stationsDisplayed.length ==0)
 				{
-					$("#alert").html('<div class="alert alert-warning"><button type="button" class="close" data-dismiss="alert">x</button>'+
-						'No station has been found.</div>');
+					$("#alert").html('<div class="alert alert-warning">'+'No stations have been found.</div>');
 				}
 				else
 				{
 					$("#alert").html(
-						'<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">x</button>'+
-						stationsDisplayed.length+' stations have been found.</div>'
+						'<div class="alert alert-success">Showing '+stationsDisplayed.length+' of '+markers.length+' stations matching your search.</div>'
 					);
 				}
 				$("#alert").show();
@@ -174,12 +193,106 @@ $contents = json_decode($contents);
 				} 			
 			}
 			
+			// terrible code-duplicated function to run location lookups
+			
+			function stationsNear(location) {
+					var address = location;
+					$("#address").val(address);
+					$("#radius>option:eq(2)").attr('selected', true);
+					$("#filter-lift").prop("checked", true);
+					
+					radius = parseFloat(1)*1600;
+					console.log("radius:"+radius);
+					stationsDisplayed = new Array();
+					if(address !== undefined && $.trim(address).length >0)
+					{
+						var geocoder = new google.maps.Geocoder();
+        				geocoder.geocode( 
+        					{'address': address },
+            				function(data, status) 
+            				{ 
+            					var lat = data[0].geometry.location.Xa;
+								var lng = data[0].geometry.location.Ya;
+								var latlng = new google.maps.LatLng(lat,lng,true);
+								//console.log(latlng.toString());
+								//draw a circle
+								if (circle != null) {
+									//console.log("setvisible");
+								    circle.setVisible(false);
+        							circle.setMap(null);
+    							}
+    							
+    							if(currentMarker != null) currentMarker.setMap(null);
+    							
+    							currentMarker = new google.maps.Marker({
+   										map: map,
+   										position: latlng,
+    									draggable: false
+  								});
+  								
+								circle = new google.maps.Circle({
+									radius:radius,
+									strokeColor: "#FF0000",
+        							strokeOpacity: 0.8,
+        							strokeWeight: 2,
+        							fillColor: "#FF0000",
+       								fillOpacity: 0.35,
+       								map: map
+								});
+								
+								circle.bindTo('center', currentMarker, 'position');
+																
+								map.setCenter(currentMarker.getPosition());
+								$.each(markers, function(i, station) {
+									checkDistance(station);
+								});
+								//set focus if stations are available
+								//console.log("displayed "+stationsDisplayed.length);
+								if(stationsDisplayed.length >0)
+								{
+									/*
+									var latlngbounds = new google.maps.LatLngBounds( );
+									for ( var i = 0; i < stationsDisplayed.length; i++ ) {
+  										latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
+									}
+									//map.setCenter(currentMarker.getPosition());
+									map.fitBounds( latlngbounds );*/
+									
+								}
+								map.fitBounds( circle.getBounds() );
+								
+								showStationsCount();
+							});
+					}
+					else
+					{
+						alert("Please input the Postcode");
+					}
+					return false;
+			}
 			
 			// When ready, fire up the google map. RDF loads when the map is ready.
 			$(function() {
 				google.maps.event.addDomListener(window, 'load', initialize);
 				
-				$("input[type='checkbox']").click(function() {
+				$("#clear_btn").click(function() {
+					if(circle != null) circle.setMap(null);
+					if(currentMarker != null) currentMarker.setMap(null);
+					
+					map.setCenter(initialLatLong);
+					map.setZoom(10);
+					
+					$.each(markers, function(i, marker) {
+						marker.setVisible(true);
+					});
+					return false;
+				});
+				
+				$(".locationlookups a").click(function() {
+					return false;
+				});
+				
+				$("input[type='checkbox']").change(function() {
 					stationsDisplayed = new Array();
 					$.each(markers, function(i, station) {
 						if(currentMarker != null)
@@ -221,7 +334,9 @@ $contents = json_decode($contents);
         							circle.setMap(null);
     							}
     							
-    							var marker = new google.maps.Marker({
+    							if(currentMarker != null) currentMarker.setMap(null);
+    							
+    							currentMarker = new google.maps.Marker({
    										map: map,
    										position: latlng,
     									draggable: false
@@ -237,8 +352,7 @@ $contents = json_decode($contents);
        								map: map
 								});
 								
-								circle.bindTo('center', marker, 'position');
-								currentMarker = marker;
+								circle.bindTo('center', currentMarker, 'position');
 								
 								map.setCenter(currentMarker.getPosition());
 								$.each(markers, function(i, station) {
@@ -248,13 +362,16 @@ $contents = json_decode($contents);
 								//console.log("displayed "+stationsDisplayed.length);
 								if(stationsDisplayed.length >0)
 								{
+									/*
 									var latlngbounds = new google.maps.LatLngBounds( );
 									for ( var i = 0; i < stationsDisplayed.length; i++ ) {
   										latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
 									}
 									//map.setCenter(currentMarker.getPosition());
-									map.fitBounds( latlngbounds );
+									map.fitBounds( latlngbounds );*/
+									
 								}
+								map.fitBounds( circle.getBounds() );
 								
 								showStationsCount();
 							});
@@ -267,7 +384,6 @@ $contents = json_decode($contents);
 				});
 			});
 			
-			var stations = <?php echo json_encode($contents); ?>;
 			var markers = new Array();
 		</script>
 		
@@ -278,17 +394,14 @@ $contents = json_decode($contents);
 	<body>
 		<div class="container" id="container">
 			<div class="page-header">
-					<h1>Tube London <small>Accessible London Tube Map</small></h1>
+					<h1><img src='/railgb/img/theme/tube-logo.png' alt="London Underground"/> Tubes <small>Accessible London Tube Map</small><a class="btn pull-right" href='/railgb'>Switch to National Rail</a></h1>
 				</div>
 			<div class="row-fluid">
 				<div class="span8">
-					<div id="map-canvas" style="width: 700px; height: 900px"></div>
+					<div id="map-canvas" style="width: 700px; height: 700px"></div>
 				</div>
 				<div class="span4">
-					<div class="pull-right"><span class="badge badge-success" id="total_span"></span></div>
-					<br/>
-					<br/>
-					<div id="alert" style="display:none"></div>
+					<div id="alert"><div class="alert alert-info">Loading&hellip;</div></div>
 					<div>
 						<form class="form-search">
 							<div class="control-group">
@@ -309,18 +422,32 @@ $contents = json_decode($contents);
     							</div>
     							<br/>
 								<div class="controls">
-									<label><input type="checkbox" name="station" id="filter-lift" value="lift" /> Lift available <img src="img/fugue/ticket-1.png" alt="ticket office" /></label><br />
+									<label><input type="checkbox" name="station" id="filter-lift" value="lift" /> Lift available <img src="/railgb/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
 								</div>
 						</form>
 						<br/>
-						<button class="btn btn-primary" id="search_btn">Search</button>
+						<button class="btn btn-primary" id="search_btn" type="submit">Search</button>
+						<a class="btn pull-right" id="clear_btn" href="#" onclick="return false">Clear Results</a>
+						<div class="locationlookups">
+							<h4>Accessible Stations Near&hellip;</h4>
+							<p><a href='#' onclick='stationsNear("SW1W 0DH")'>Dyslexia Action</a></p>
+							<p><a href='#' onclick='stationsNear("SE16 3TP")'>City Mobility</a></p>
+							<p><a href='#' onclick='stationsNear("WC1N 3JH")'>Great Ormond Street Hospital for Children</a></p>
+							<p><a href='#' onclick='stationsNear("SW7 5BD")'>Natural History Museum</a></p>
+							<p><a href='#' onclick='stationsNear("WC1H 9NE")'>RNIB</a></p>
+							<p><a href='#' onclick='stationsNear("WC2R 0EU")'>The Savoy</a></p>
+							<p><a href='#' onclick='stationsNear("SW7 2DD")'>Science Museum</a></p>
+							<p><a href='#' onclick='stationsNear("N7 9PW")'>Scope</a></p>
+							<p><a href='#' onclick='stationsNear("SE1 7EH")'>St. Thomas' Hospital</a></p>
+							<p><a href='#' onclick='stationsNear("EC1Y 8SL")'>Action on Hearing Loss</a></p>
+						</div>
 					</div>
 					<div id="station" style="display:none">
 						<h4 id="station-name"></h4>
 						<div id="station-innerticket">
 							<p><b>Lift:</b> <span id="station-lift"></span></p>
 						</div>
-						<div id="station-footer"><img src='img/theme/ticket-logo.png' alt='National Rail' /></div>
+						<div id="station-footer"><img src='/railgb/img/theme/ticket-logo.png' alt='National Rail' /></div>
 					</div>
 				</div>
 			</div>
@@ -328,8 +455,8 @@ $contents = json_decode($contents);
 		
 		<div class="container">
 			<footer>
-				<p class="pull-right muted"><a href="about.php">About</a></p>
-				<p class="pull-left"><img src="img/theme/uos.png" alt="University of Southampton"></p>
+				<p class="pull-right muted"><a href="/railgb/about">About</a></p>
+				<p class="pull-left"><img src="/railgb/img/theme/uos.png" alt="University of Southampton"></p>
 			</footer>
 		</div>
 		
