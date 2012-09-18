@@ -312,7 +312,7 @@ $contents = json_decode($contents);
 	<body>
 		<div class="container" id="container">
 			<div class="page-header">
-				<h1><img src="/railgb/img/pins/rail-red.png" /> RailGB <small>Accessible Rail Network Map</small> <a class="btn pull-right" href="/railgb">Switch to London Underground</a></h1>
+				<h1><img src="/railgb/img/pins/rail-red.png" /> RailGB <small>Accessible Rail Network Map</small> <a class="btn pull-right" href="/railgb/tube">Switch to London Underground</a></h1>
 			</div>
 			
 			<div class="row-fluid">
