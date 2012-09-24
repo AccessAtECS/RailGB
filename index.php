@@ -20,7 +20,7 @@ WHERE
 	?t rf:availability ?ticket.
 	?t rdfs:label \"Ticket Office\"@en.
   }
-  OPTIONAL
+  OPTIONAL/Volumes/Macintosh%20HD/Users/mpw/Documents/Work/RailGB/RailGB%20Git/index.php
   {
 	?station ?p2 ?s.
 	?s rf:availability ?staffing.
@@ -41,12 +41,10 @@ $contents = "lol";
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<link rel="icon" href="img/theme/favicon.png" type="image/x-icon">
-		<link href="css/bootstrap.css" rel="stylesheet">
-		<link href="css/bootstrap-responsive.css" rel="stylesheet">
-		<link href="css/railgb.css" rel="stylesheet">
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<?
+			$path = $_SERVER['DOCUMENT_ROOT'];
+			include_once($path.'/includes/header.php');
+		?>
 		
 		<title>RailGB - Accessible Rail Network Map</title>
 		
@@ -68,7 +66,7 @@ $contents = "lol";
 			function initialize() {
 				
 				// Image for each pin
-				var image = 'img/pins/rail-red.png';
+				var image = '/public/img/pins/rail.png';
 				
 				// Fire up map
 				var mapDiv = document.getElementById('map-canvas');
@@ -81,7 +79,7 @@ $contents = "lol";
 				// Add "Loading" text here.
 				var count = 0;
 				
-				$.getJSON("/railgb/ajax/rail.php", function(stations) {
+				$.getJSON("/public/ajax/rail.php", function(stations) {
 					$.each(stations.results.bindings, function(i, station) {
 					
 						var ticketoffice = {value: false, text: 'Not available'};
@@ -303,7 +301,7 @@ $contents = "lol";
 					}
 					else
 					{
-						alert("Please input the Postcode");
+						alert("Please input a town or postcode");
 					}
 					return false;
 				});
@@ -317,9 +315,12 @@ $contents = "lol";
 	
 	
 	<body>
+	
+		<? include_once($path.'/includes/menu.php'); ?>
+		
 		<div class="container" id="container">
 			<div class="page-header">
-				<h1><img src="/railgb/img/pins/rail-red.png" /> RailGB <small>Accessible Rail Network Map</small> <a class="btn pull-right" href="/railgb/tube">Switch to London Underground</a></h1>
+				<h1><img src="/public/img/pins/rail.png" alt="national rail logo" /> RailGB <small>Accessible Rail Network Map</small></h1>
 			</div>
 			
 			<div class="row-fluid">
@@ -349,11 +350,11 @@ $contents = "lol";
     							
     							<label>Select stations to show with:</label>
 								<div class="controls">
-									<label><input type="checkbox" name="station" id="filter-ticketoffice" value="ticketoffice" /> Ticket Office <img src="img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-									<label><input type="checkbox" name="station" id="filter-staff" value="staff" /> Staffed <img src="img/fugue/user.png" alt="staffed" /></label><br />
-									<label><input type="checkbox" name="station" id="filter-ramp" value="ramp" /> Ramp <img src="img/fugue/road.png" alt="ramp" /></label><br />
+									<label><input type="checkbox" name="station" id="filter-ticketoffice" value="ticketoffice" /> Ticket Office <img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
+									<label><input type="checkbox" name="station" id="filter-staff" value="staff" /> Staffed <img src="/public/img/fugue/user.png" alt="staffed" /></label><br />
+									<label><input type="checkbox" name="station" id="filter-ramp" value="ramp" /> Ramp <img src="/public/img/fugue/road.png" alt="ramp" /></label><br />
 								</div>
-								<!-- Removed random div here....it fixed the search function, but not sure why! -->
+							</div>
 						</form>
 						<button class="btn btn-primary" id="search_btn" type="submit">Search</button>
 						<button class="btn pull-right" id="clear_btn">Clear Results</button>
@@ -367,19 +368,13 @@ $contents = "lol";
 							<p><b>Staffing:</b> <span id="station-staffing"></span></p>
 							<p><b>Ramp:</b> <span id="station-ramp"></span></p>
 						</div>
-						<div id="station-footer"><img src='img/theme/ticket-logo.png' alt='National Rail' /></div>
+						<div id="station-footer"><img src='/public/img/theme/ticket-logo.png' alt='National Rail' /></div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="container">
-			<footer>
-				<p class="pull-right muted"><a href="/railgb/about">About</a></p>
-				<p class="pull-left"><img src="img/theme/uos.png" alt="University of Southampton"></p>
-			</footer>
-		</div>
-
+		<? include_once($path.'/includes/footer.php'); ?>
 		
 	</body>
 </html>

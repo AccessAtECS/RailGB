@@ -31,12 +31,10 @@ $contents = "lol";
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<link rel="icon" href="/railgb/img/theme/favicon.png" type="image/x-icon">
-		<link href="/railgb/css/bootstrap.css" rel="stylesheet">
-		<link href="/railgb/css/bootstrap-responsive.css" rel="stylesheet">
-		<link href="/railgb/css/railgb.css" rel="stylesheet">
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-		<script type="text/javascript" src="/railgb/js/bootstrap.min.js"></script>
+		<?
+			$path = $_SERVER['DOCUMENT_ROOT'];
+			include_once($path.'/includes/header.php');
+		?>
 		
 		<title>Tube London - Accessible London Tube Map</title>
 		
@@ -64,9 +62,9 @@ $contents = "lol";
 						
 						if(station.hasLift.value === "true") {
 							hasLift = {value:true,text:'Lift available'};
-							image = '/railgb/img/theme/wheelchair-ok.png';
+							image = '/public/img/pins/wheelchair-ok.png';
 						} else {
-							image = '/railgb/img/theme/wheelchair-not-ok.png';
+							image = '/public/img/pins/wheelchair-not-ok.png';
 						}
 						
 						//console.log("hasLift",station.hasLift.value);
@@ -96,7 +94,7 @@ $contents = "lol";
 			function initialize() {
 				
 				// Image for each pin
-				var image = '/railgb/img/theme/wheelchair-not-ok.png';
+				var image = '/public/img/theme/wheelchair-not-ok.png';
 				
 				// Fire up map
 				var mapDiv = document.getElementById('map-canvas');
@@ -112,7 +110,7 @@ $contents = "lol";
 				
 				
 				//if(typeof sessionStorage.tube == "undefined") {
-					$.getJSON("/railgb/ajax/tube.php", function(stations) {
+					$.getJSON("/public/ajax/tube.php", function(stations) {
 						fireUpStations(stations);
 						//sessionStorage.tube = stations;
 					});
@@ -266,7 +264,7 @@ $contents = "lol";
 					}
 					else
 					{
-						alert("Please input the Postcode");
+						alert("Please input a postcode");
 					}
 					return false;
 			}
@@ -378,7 +376,7 @@ $contents = "lol";
 					}
 					else
 					{
-						alert("Please input the Postcode");
+						alert("Please input a postcode");
 					}
 					return false;
 				});
@@ -392,9 +390,12 @@ $contents = "lol";
 	
 	
 	<body>
+	
+		<? include_once($path.'/includes/menu.php'); ?>
+		
 		<div class="container" id="container">
 			<div class="page-header">
-					<h1><img src='/railgb/img/theme/tube-logo.png' alt="London Underground"/> Tubes <small>Accessible London Tube Map</small><a class="btn pull-right" href='/railgb'>Switch to National Rail</a></h1>
+					<h1><img src='/public/img/theme/tube-logo.png' alt="London Underground logo"/> London Underground <small>Accessible London Underground Map</small></h1>
 				</div>
 			<div class="row-fluid">
 				<div class="span8">
@@ -407,7 +408,7 @@ $contents = "lol";
 							<div class="control-group">
 								<label for="address" class="control-label"><b>Location</b></label>
 								<div class="controls">
-    								<input type="text" name="address" id="address" class="input-long" placeholder="Please Input the Postcode"/>
+    								<input type="text" name="address" id="address" class="input-long" placeholder="Postcode"/>
     							</div>
     							<label for="radius" class="control-label"><b>Search Radius</b></label>
     							<div class="controls">
@@ -422,16 +423,26 @@ $contents = "lol";
     							</div>
     							<br/>
 								<div class="controls">
-									<label><input type="checkbox" name="station" id="filter-lift" value="lift" /> Lift available <img src="/railgb/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
+									<label><input type="checkbox" name="station" id="filter-lift" value="lift" /> Lift available <img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
 								</div>
+							</div>
 						</form>
-						<br/>
 						<button class="btn btn-primary" id="search_btn" type="submit">Search</button>
 						<a class="btn pull-right" id="clear_btn" href="#" onclick="return false">Clear Results</a>
+						
+						<br /><br />
+						<div id="station" style="display:none">
+							<h4 id="station-name"></h4>
+							<div id="station-innerticket">
+								<p><b>Lift:</b> <span id="station-lift"></span></p>
+							</div>
+							<div id="station-footer"><img src='/public/img/theme/ticket-logo.png' alt='National Rail' /></div>
+						</div>
+						
 						<div class="locationlookups">
 							<h4>Accessible Stations Near&hellip;</h4>
-							<p><a href='#' onclick='stationsNear("SW1W 0DH")'>Dyslexia Action</a></p>
 							<p><a href='#' onclick='stationsNear("SE16 3TP")'>City Mobility</a></p>
+							<p><a href='#' onclick='stationsNear("SW1W 0DH")'>Dyslexia Action</a></p>
 							<p><a href='#' onclick='stationsNear("WC1N 3JH")'>Great Ormond Street Hospital for Children</a></p>
 							<p><a href='#' onclick='stationsNear("SW7 5BD")'>Natural History Museum</a></p>
 							<p><a href='#' onclick='stationsNear("WC1H 9NE")'>RNIB</a></p>
@@ -442,24 +453,11 @@ $contents = "lol";
 							<p><a href='#' onclick='stationsNear("EC1Y 8SL")'>Action on Hearing Loss</a></p>
 						</div>
 					</div>
-					<div id="station" style="display:none">
-						<h4 id="station-name"></h4>
-						<div id="station-innerticket">
-							<p><b>Lift:</b> <span id="station-lift"></span></p>
-						</div>
-						<div id="station-footer"><img src='/railgb/img/theme/ticket-logo.png' alt='National Rail' /></div>
-					</div>
 				</div>
 			</div>
 		</div>
 		
-		<div class="container">
-			<footer>
-				<p class="pull-right muted"><a href="/railgb/about">About</a></p>
-				<p class="pull-left"><img src="/railgb/img/theme/uos.png" alt="University of Southampton"></p>
-			</footer>
-		</div>
-		
+		<? include_once($path.'/includes/footer.php'); ?>
 		
 	</body>
 </html>
