@@ -1,11 +1,7 @@
-<?php
-$contents = null;
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<?
+		<?php
 			$path = $_SERVER['DOCUMENT_ROOT'];
 			include_once($path.'/includes/header.php');
 		?>
@@ -13,6 +9,7 @@ $contents = null;
 		<title>Tube London - Accessible London Tube Map</title>
 		
 		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<script type="text/javascript" src="/public/ajax/tube.js"></script>
 		<script type="text/javascript">
 			var map = null;
 			var circle = null;

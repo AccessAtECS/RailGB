@@ -5,7 +5,7 @@ $contents = null;
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<?
+		<?php
 			$path = $_SERVER['DOCUMENT_ROOT'];
 			include_once($path.'/includes/header.php');
 		?>
