@@ -36,7 +36,7 @@ $brFilter = ' ?station tf:hasBridge ?br. ?br tf:facilityAvailable ?bra. FILTER(?
 $wrFilter = ' ?station tf:hasWaitingRoom ?wr. ?wr tf:facilityAvailable ?wra. FILTER(?wra = "true"^^xsd:boolean) ';
 $liftsFilter = ' ?station tf:hasLifts ?lifts. ?lifts tf:facilityAvailable ?liftsa. FILTER(?liftsa = "true"^^xsd:boolean) ';
 $wifiFilter = ' ?station tf:hasWiFi ?wifi. ?wifi tf:facilityAvailable ?wifia. FILTER(?wifia = "true"^^xsd:boolean) ';
-$sfFilter = ' FILTER(?sfa = "true"^^xsd:boolean)';
+$sfFilter = ' FILTER(?sf = "true"^^xsd:boolean)';
 
 //Fb::log("help");
 $facility = $_GET['facility'];
@@ -147,7 +147,7 @@ $queryList = "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 				?station tf:isStepFreeStation ?sf.
 				
 				$filter
-			} LIMIT 10";
+			}";
 echo $queryList;
 $contents = file_get_contents("http://oad.rkbexplorer.com/sparql/?format=json&query=".urlencode(str_replace("\n", " ", $queryList)));
 $contents = json_decode($contents);
