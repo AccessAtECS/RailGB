@@ -7,10 +7,12 @@ $contents = null;
 	<head>
 		<?
 			$path = $_SERVER['DOCUMENT_ROOT'];
-			include_once($path.'/includes/header.php');
+			require_once($path.'/../library/Mobile_Detect.php');
+			require_once($path.'/includes/mobile.php');
+			require_once($path.'/includes/header.php');
 		?>
 		
-		<title>Tube London - Accessible London Tube Map</title>
+		<title>Tube London - Accessible London Underground Map</title>
 		
 		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 		<script type="text/javascript">
@@ -365,7 +367,7 @@ $contents = null;
 	
 	<body>
 	
-		<? include_once($path.'/includes/menu.php'); ?>
+		<? require_once($path.'/includes/menu.php'); ?>
 		
 		<div class="container" id="container">
 			<div class="page-header">
@@ -373,7 +375,7 @@ $contents = null;
 				</div>
 			<div class="row-fluid">
 				<div class="span8">
-					<div id="map-canvas" style="width: 700px; height: 700px"></div>
+					<div id="map-canvas" <?=($detect->isMobile()) ? 'style="width: 220; height: 250"' : 'style="width: 700px; height: 700px"'; ?>></div>
 				</div>
 				<div class="span4">
 					<div id="alert"><div class="alert alert-info">Loading&hellip;</div></div>
@@ -431,7 +433,7 @@ $contents = null;
 			</div>
 		</div>
 		
-		<? include_once($path.'/includes/footer.php'); ?>
+		<? require_once($path.'/includes/footer.php'); ?>
 		
 	</body>
 </html>
