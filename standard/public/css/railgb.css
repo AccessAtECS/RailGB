@@ -64,10 +64,12 @@ h1 {
 	padding: 5px 0 6px 7px;
 }
 
+/*
 #map-canvas {
 	width: 700px; 
 	height: 700px;
 }
+*/
 
 #map-canvas img {
 	max-width: none;

@@ -3,7 +3,9 @@
 	<head>
 		<?
 			$path = $_SERVER['DOCUMENT_ROOT'];
-			include_once($path.'/includes/header.php');
+			require_once($path.'/../library/Mobile_Detect.php');
+			require_once($path.'/includes/mobile.php');
+			require_once($path.'/includes/header.php');
 		?>
 		
 		<title>RailGB - Accessible Rail Network Map</title>
@@ -11,7 +13,7 @@
 
 	<body>
 	
-		<? include_once($path.'/includes/menu.php'); ?>
+		<? require_once($path.'/includes/menu.php'); ?>
 	
 		<div class="container" id="container">
 			<div class="page-header">
@@ -31,7 +33,7 @@
 			</div>
 		</div>
 
-		<? include_once($path.'/includes/footer.php'); ?>
+		<? require_once($path.'/includes/footer.php'); ?>
 		
 	</body>
 </html>
