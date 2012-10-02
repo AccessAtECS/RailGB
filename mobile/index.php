@@ -72,7 +72,7 @@
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				});
 
-				$.getJSON("/public/ajax/rail.php", function(stations) {
+				$.getJSON("/public/ajax/tube.php", function(stations) {
 					fireUpStations(stations);
 				});
 			}
