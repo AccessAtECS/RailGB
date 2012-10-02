@@ -18,48 +18,45 @@
 			var radius = 1600.0; //1 miles
 			var initialLatLong = new google.maps.LatLng(51.508129, -0.128005);
 			
-			if (typeof(Number.prototype.toRad) === "undefined") {
-  				Number.prototype.toRad = function() {
-    				return this * Math.PI / 180;
+			if (typeof(Number.prototype.toRad) === "undefined"){
+  				Number.prototype.toRad = function(){
+					return this * Math.PI / 180;
   				}
 			}
 			
-			function fireUpStations(stations) {
+			function fireUpStations(stations){
 				var count = 0;
-				$.each(stations.results.bindings, function(i, station) {
+				$.each(stations.results.bindings, function(i, station){
 						
-						var hasLift = {value: false, text: 'Not available'};
-						
-						
-						if(station.hasLift.value === "true") {
-							hasLift = {value:true,text:'Lift available'};
-							image = 'http://wwww.railgb.org.uk/public/img/pins/wheelchair-ok.png';
-						} else {
-							image = 'http://wwww.railgb.org.uk/public/img/pins/wheelchair-not-ok.png';
-						}
-						
-						//console.log("hasLift",station.hasLift.value);
-						markers.push(new google.maps.Marker({
-							position: new google.maps.LatLng(station.lat.value, station.long.value),
-							map: map,
-							title: station.name.value.replace(" tube station", ""),
-							icon: image,
-							draggable: false,
-							lift: hasLift,
-							visible: true
-						}));
-						
-						count++;
-						// Marker display box
-						google.maps.event.addListener(markers[markers.length - 1], 'click', function(){
-							$("#station-name").html(this.title);
-							$("#station-lift").html(this.lift.text);
-							$("#station").show();
-						});
+					var hasLift = {value: false, text: 'Not available'};
+					
+					if(station.hasLift.value === "true"){
+						hasLift = {value:true,text:'Lift available'};
+						image = 'http://wwww.railgb.org.uk/public/img/pins/wheelchair-ok.png';
+					} else {
+						image = 'http://wwww.railgb.org.uk/public/img/pins/wheelchair-not-ok.png';
+					}
+					
+					//console.log("hasLift",station.hasLift.value);
+					markers.push(new google.maps.Marker({
+						position: new google.maps.LatLng(station.lat.value, station.long.value),
+						map: map,
+						title: station.name.value.replace(" tube station", ""),
+						icon: image,
+						draggable: false,
+						lift: hasLift,
+						visible: true
+					}));
+					
+					count++;
+					// Marker display box
+					google.maps.event.addListener(markers[markers.length - 1], 'click', function(){
+						$("#station-name").html(this.title);
+						$("#station-lift").html(this.lift.text);
+						$("#station").show();
 					});
-					$("#alert").html(
-						'<div class="alert alert-success">Showing '+count+' stations.</div>'
-					).show();
+				});
+				$("#alert").hide();
 			}
 
 			function initialize() {
@@ -74,96 +71,52 @@
 					zoom: 10,
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				});
-				
-				// Add "Loading" text here.
-				
-				//console.log(stations);
-				
-				
-				//if(typeof sessionStorage.tube == "undefined") {
-					$.getJSON("/public/ajax/rail.php", function(stations) {
-						fireUpStations(stations);
-						//sessionStorage.tube = stations;
-					});
-				//} else {
-				//	fireUpStations(sessionStorage.tube);
-				//}
-				
-				// Clear "Loading" text here
+
+				$.getJSON("/public/ajax/rail.php", function(stations) {
+					fireUpStations(stations);
+				});
 			}
 			
-			function showStationsCount()
-			{
-				if(stationsDisplayed.length ==0)
-				{
-					$("#alert").html('<div class="alert alert-warning">'+'No stations have been found.</div>');
-				}
-				else
-				{
-					$("#alert").html(
-						'<div class="alert alert-success">Showing '+stationsDisplayed.length+' of '+markers.length+' stations matching your search.</div>'
-					);
-				}
+			function showStationsCount(){
+				if(stationsDisplayed.length ==0) $("#alert").html('<div class="alert alert-warning">'+'No stations have been found.</div>');
+				else $("#alert").html('<div class="alert alert-success">Showing '+stationsDisplayed.length+' of '+markers.length+' stations matching your search.</div>');
 				$("#alert").show();
 			}
 			
-			function checkDistance(station)
-			{
-					//console.log("currentMarker:"+currentMarker);
-					station.setVisible(true);
-					if(currentMarker != null)
-					{
-						//console.log("here");
-						var distance =-1;
-						var lat1 = currentMarker.getPosition().lat();
-						var lat2 = station.getPosition().lat();
-						var lon1 = currentMarker.getPosition().lng();
-						var lon2 = station.getPosition().lng();
-						//console.log("here2");
-						var R = 6371; // Radius of the earth in km
-						var dLat = (lat2-lat1).toRad();
-						var dLon = (lon2-lon1).toRad(); 
-						var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-        					Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
-        					Math.sin(dLon/2) * Math.sin(dLon/2); 
-						var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-						//console.log("here3");
-						//console.log(station.getPosition().toString()+"###"+currentMarker.getPosition().toString());
-						//console.log("distance:"+distance);
-						//console.log("radius:"+radius);
-						distance = R * c *1000; // Distance in Meters
-						//console.log("distance:"+distance);
-         				if(distance <= radius)
-         				{
-         				 	//console.log("within distance:"+station.title);
-         				 	checkAccessibility(station);
-         				}
-         				else
-         				{
-         				    station.setVisible(false);			
-         				}
-					}
+			function checkDistance(station){
+				station.setVisible(true);
+				if(currentMarker != null){
+					var distance =-1;
+					var lat1 = currentMarker.getPosition().lat();
+					var lat2 = station.getPosition().lat();
+					var lon1 = currentMarker.getPosition().lng();
+					var lon2 = station.getPosition().lng();
+
+					var R = 6371; // Radius of the earth in km
+					var dLat = (lat2-lat1).toRad();
+					var dLon = (lon2-lon1).toRad(); 
+					var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+						Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+						Math.sin(dLon/2) * Math.sin(dLon/2); 
+					var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+
+					distance = R * c *1000; // Distance in Meters
+					
+	 				if(distance <= radius) checkAccessibility(station);
+	 				else station.setVisible(false);	
+				}
 			}
 			
-			function checkAccessibility(station)
-			{
-				
+			function checkAccessibility(station){
 				var filterLift = $("#filter-lift").is(':checked');
 				
 				station.setVisible(true);
 					
-				if(filterLift== true && station.lift.value == false) {
-					station.setVisible(false);
-				}
-				
-				if(station.getVisible() === true)
-				{
-					stationsDisplayed.push(station);
-				} 			
+				if(filterLift== true && station.lift.value == false) station.setVisible(false);
+				if(station.getVisible() === true) stationsDisplayed.push(station);		
 			}
 			
 			// terrible code-duplicated function to run location lookups
-			
 			function stationsNear(location) {
 					var address = location;
 					$("#address").val(address);
@@ -173,40 +126,37 @@
 					radius = parseFloat(1)*1600;
 					console.log("radius:"+radius);
 					stationsDisplayed = new Array();
-					if(address !== undefined && $.trim(address).length >0)
-					{
+					if(address !== undefined && $.trim(address).length >0){
 						var geocoder = new google.maps.Geocoder();
-        				geocoder.geocode( 
-        					{'address': address },
-            				function(data, status) 
-            				{ 
-            					var lat = data[0].geometry.location.Xa;
+						geocoder.geocode( 
+							{'address': address },
+							function(data, status){ 
+								var lat = data[0].geometry.location.Xa;
 								var lng = data[0].geometry.location.Ya;
 								var latlng = new google.maps.LatLng(lat,lng,true);
-								//console.log(latlng.toString());
+								
 								//draw a circle
 								if (circle != null) {
-									//console.log("setvisible");
-								    circle.setVisible(false);
-        							circle.setMap(null);
-    							}
-    							
-    							if(currentMarker != null) currentMarker.setMap(null);
-    							
-    							currentMarker = new google.maps.Marker({
+									circle.setVisible(false);
+									circle.setMap(null);
+								}
+								
+								if(currentMarker != null) currentMarker.setMap(null);
+								
+								currentMarker = new google.maps.Marker({
    										map: map,
    										position: latlng,
-    									draggable: false
+										draggable: false
   								});
   								
 								circle = new google.maps.Circle({
 									radius:radius,
 									strokeColor: "#FF0000",
-        							strokeOpacity: 0.8,
-        							strokeWeight: 2,
-        							fillColor: "#FF0000",
-       								fillOpacity: 0.35,
-       								map: map
+									strokeOpacity: 0.8,
+									strokeWeight: 2,
+									fillColor: "#FF0000",
+	   								fillOpacity: 0.35,
+	   								map: map
 								});
 								
 								circle.bindTo('center', currentMarker, 'position');
@@ -215,28 +165,12 @@
 								$.each(markers, function(i, station) {
 									checkDistance(station);
 								});
-								//set focus if stations are available
-								//console.log("displayed "+stationsDisplayed.length);
-								if(stationsDisplayed.length >0)
-								{
-									/*
-									var latlngbounds = new google.maps.LatLngBounds( );
-									for ( var i = 0; i < stationsDisplayed.length; i++ ) {
-  										latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
-									}
-									//map.setCenter(currentMarker.getPosition());
-									map.fitBounds( latlngbounds );*/
-									
-								}
 								map.fitBounds( circle.getBounds() );
 								
 								showStationsCount();
 							});
 					}
-					else
-					{
-						alert("Please input a postcode");
-					}
+					else alert("Postcode or Area");
 					return false;
 			}
 			
@@ -251,28 +185,21 @@
 					map.setCenter(initialLatLong);
 					map.setZoom(10);
 					
-					$.each(markers, function(i, marker) {
+					$.each(markers, function(i, marker){
 						marker.setVisible(true);
 					});
 					return false;
 				});
 				
-				$(".locationlookups a").click(function() {
+				$(".locationlookups a").click(function(){
 					return false;
 				});
 				
-				$("input[type='checkbox']").change(function() {
+				$("input[type='checkbox']").change(function(){
 					stationsDisplayed = new Array();
-					$.each(markers, function(i, station) {
-						if(currentMarker != null)
-						{
-							checkDistance(station);
-						}
-						else
-						{					
-							//console.log("check acc");
-							checkAccessibility(station);
-						}
+					$.each(markers, function(i, station){
+						if(currentMarker != null) checkDistance(station);
+						else checkAccessibility(station);
 					});
 					
 					showStationsCount();
@@ -285,70 +212,50 @@
 					radius = parseFloat($("#radius").val())*1600;
 					console.log("radius:"+radius);
 					stationsDisplayed = new Array();
-					if(address !== undefined && $.trim(address).length >0)
-					{
+					if(address !== undefined && $.trim(address).length >0){
 						var geocoder = new google.maps.Geocoder();
-        				geocoder.geocode( 
-        					{'address': address },
-            				function(data, status) 
-            				{ 
-            					var lat = data[0].geometry.location.Xa;
+						geocoder.geocode( 
+							{'address': address },
+							function(data, status) { 
+								var lat = data[0].geometry.location.Xa;
 								var lng = data[0].geometry.location.Ya;
 								var latlng = new google.maps.LatLng(lat,lng,true);
-								//console.log(latlng.toString());
 								//draw a circle
-								if (circle != null) {
-									//console.log("setvisible");
-								    circle.setVisible(false);
-        							circle.setMap(null);
-    							}
-    							
-    							if(currentMarker != null) currentMarker.setMap(null);
-    							
-    							currentMarker = new google.maps.Marker({
+								if (circle != null){
+									circle.setVisible(false);
+									circle.setMap(null);
+								}
+								
+								if(currentMarker != null) currentMarker.setMap(null);
+								
+								currentMarker = new google.maps.Marker({
    										map: map,
    										position: latlng,
-    									draggable: false
+										draggable: false
   								});
   								
 								circle = new google.maps.Circle({
 									radius:radius,
 									strokeColor: "#FF0000",
-        							strokeOpacity: 0.8,
-        							strokeWeight: 2,
-        							fillColor: "#FF0000",
-       								fillOpacity: 0.35,
-       								map: map
+									strokeOpacity: 0.8,
+									strokeWeight: 2,
+									fillColor: "#FF0000",
+	   								fillOpacity: 0.35,
+	   								map: map
 								});
 								
 								circle.bindTo('center', currentMarker, 'position');
 								
 								map.setCenter(currentMarker.getPosition());
-								$.each(markers, function(i, station) {
+								$.each(markers, function(i, station){
 									checkDistance(station);
 								});
-								//set focus if stations are available
-								//console.log("displayed "+stationsDisplayed.length);
-								if(stationsDisplayed.length >0)
-								{
-									/*
-									var latlngbounds = new google.maps.LatLngBounds( );
-									for ( var i = 0; i < stationsDisplayed.length; i++ ) {
-  										latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
-									}
-									//map.setCenter(currentMarker.getPosition());
-									map.fitBounds( latlngbounds );*/
-									
-								}
 								map.fitBounds( circle.getBounds() );
 								
 								showStationsCount();
 							});
 					}
-					else
-					{
-						alert("Please input a postcode");
-					}
+					else alert("Please input a postcode");
 					return false;
 				});
 			});
@@ -361,62 +268,55 @@
 	<body>
 	
 		<? include_once($path.'/includes/menu.php'); ?>
-		
-		<div class="container" id="container">
-			<div class="page-header">
-					<h1><img src="http://www.railgb.org.uk/public/img/theme/tube-logo.png" alt="London Underground logo"/> London Underground <small>Accessible London Underground Map</small></h1>
-					<script>
-						var width = $(document).width();
-						$("#map-canvas").css("width", width);
-					</script>
-				</div>
+		<div class="map-area">
 			<div class="row-fluid">
+				<div id="map-canvas" style="width: 200px; height: 200px"></div>
+				<br />
+				<div id="alert"><div class="alert alert-info">Loading&hellip; <img src="http://www.railgb.org.uk/public/img/loading.gif" style="height: 20px;"/></div></div>
+				
 				<div>
-					<div id="map-canvas" style="width: 200px; height: 200px"></div>
-				</div>
-				<div>
-					<div id="alert"><div class="alert alert-info">Loading&hellip;</div></div>
-					<div>
-						<form class="form-search">
-							<div class="control-group">
-								<label for="address" class="control-label"><b>Location</b></label>
-								<div class="controls">
-    								<input type="text" name="address" id="address" class="input-long" placeholder="Postcode"/>
-    							</div>
-    							<label for="radius" class="control-label"><b>Search Radius</b></label>
-    							<div class="controls">
-    								<select id="radius" name="radius">
-    									<option value="0.25">0.25 mile</option>
-										<option value="0.5" selected="selected">0.5 miles</option>
-										<option value="1.0">1 miles</option>
-										<option value="2.0">2 miles</option>
-										<option value="5.0">5 miles</option>
-										<option value="10.0">10 miles</option>
-    								</select>
-    							</div>
-    							<br/>
-								<div class="controls">
-									<label><input type="checkbox" name="station" id="filter-lift" value="lift" /> Lift available <img src="http://www.railgb.org.uk/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-								</div>
+					<form class="form-search">
+						<div class="control-group">
+							<label for="address" class="control-label"><b>Location</b></label>
+							<div class="controls">
+								<input type="text" name="address" id="address" class="input-long" placeholder="Postcode"/>
 							</div>
-						</form>
-						<button class="btn btn-primary" id="search_btn" type="submit">Search</button>
-						<a class="btn pull-right" id="clear_btn" href="#" onclick="return false">Clear Results</a>
-						
-						<br /><br />
-						<div id="station" style="display:none">
-							<h4 id="station-name"></h4>
-							<div id="station-innerticket">
-								<p><b>Lift:</b> <span id="station-lift"></span></p>
+							<label for="radius" class="control-label"><b>Search Radius</b></label>
+							<div class="controls">
+								<select id="radius" name="radius">
+									<option value="0.25">0.25 mile</option>
+									<option value="0.5" selected="selected">0.5 miles</option>
+									<option value="1.0">1 miles</option>
+									<option value="2.0">2 miles</option>
+									<option value="5.0">5 miles</option>
+									<option value="10.0">10 miles</option>
+								</select>
 							</div>
-							<div id="station-footer"><img src="http://www.railgb.org.uk/public/img/theme/ticket-logo.png" alt='National Rail' /></div>
+							<br/>
+							<div class="controls">
+								<label><input type="checkbox" name="station" id="filter-lift" value="lift" /> Lift available <img src="http://www.railgb.org.uk/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
+							</div>
 						</div>
-					</div>
+					</form>
+					<button class="btn btn-primary" id="search_btn" type="submit">Search</button>
+					<a class="btn pull-right" id="clear_btn" href="#" onclick="return false">Clear Results</a>
 				</div>
 			</div>
 		</div>
-
-		<? include_once($path.'/includes/footer.php'); ?>
 		
+		<div class="station-area" style="display:none">
+			<div id="station">
+				<h4 id="station-name"></h4>
+				<div id="station-innerticket">
+					<p><b>Lift:</b> <span id="station-lift"></span></p>
+				</div>
+				<div id="station-footer"><img src="http://www.railgb.org.uk/public/img/theme/ticket-logo.png" alt='National Rail' /></div>
+			</div>
+		</div>
+		
+		
+		<script>
+			$("#map-canvas").css("width", "100%");
+		</script>
 	</body>
 </html>
