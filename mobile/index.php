@@ -27,6 +27,17 @@
   				}
 			}
 			
+			function clearOverylays()
+			{
+				if(markers && markers.length > 0)
+				{
+					for(i in markers)
+					{
+						markers[i].setMap(null);
+					}
+				}
+				markers = new Array();
+			}
 			function checkDistance(station)
 			{
 					//console.log("currentMarker:"+currentMarker);
@@ -61,18 +72,15 @@
          				}
          				else
          				{
-         				    station.setVisible(false);			
+         				    station.setVisible(false);	
+         				    return false;		
          				}
 					}
 			}
-			
-			function checkAccessibility(station)
-			{
-				
-			}
-			
+						
 			function fireUpStations(stations) {
-				markers = new Array();
+				console.log("new markers");
+				clearOverylays();
 				stationsDisplayed = new Array();
 				var count = 0;
 				//console.log(stations.results.bindings.length);
@@ -88,12 +96,19 @@
 						//}
 						
 						//console.log("hasLift",station.hasLift.value);
+						
+						//Yunjia: change the image later
+						//var image = '/public/img/pins/beachflag.png';
+						var image = "http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag.png";
+						
 						//Yunjia Li: This is deliberate! There is something wrong with the dataset
 						var lng = parseFloat(station.lat.value);
 						var lat = parseFloat(station.lng.value)
 						var marker = new google.maps.Marker({
 							position: new google.maps.LatLng(lat,lng,true),
 							map: map,
+							icon:image,
+							uri: station.station.value,
 							title: station.name.value,
 							draggable: false,
 							visible: true
@@ -107,10 +122,20 @@
 						count++;
 						// Marker display box
 						google.maps.event.addListener(marker, 'click', function(){
-							$("#station-name").html(this.title);
-							//Yunjia: render has or doesn't have div
-							$("#station").show();
-							$("#map-canvas").hide();
+							$.ajax({
+								dataType:"json",
+								url: "/public/ajax/detail.php",
+								data:{stationURI:marker.uri},
+								success:function(data)
+								{
+									//console.log("successful");
+									$("#station-name").html(marker.title);
+									//Yunjia: render has or doesn't have div
+									$("#station").show();
+									$("#map-canvas").hide();
+								}
+							});
+							
 						});
 					});
 					$("#alert").html(
@@ -296,7 +321,9 @@
 				//search nearby
 				$("#search_btn").click(function(){
 					var address = $("#address").val();
-					displayStations(address,null);
+					displayStations(address,function(){
+						//Do nothing
+					});
 				});
 			});
 		</script>
@@ -306,13 +333,13 @@
 	<body>
 	
 		<? include_once($path.'/includes/menu.php'); ?>
-		<div class="map-area">
+		<div class="map-area" id="map-area">
 			<div class="row-fluid">
 				<div id="map-canvas" style="width: 200px; height: 200px"></div>
 				<br />
 				<div id="alert"><div class="alert alert-info">Loading&hellip; <img src="http://www.railgb.org.uk/public/img/loading.gif" style="height: 20px;"/></div></div>
 				
-				<div>
+				<div id="form-div">
 					<form class="form-search" id="form-search">
 						<div class="control-group">
 							<label for="address" class="control-label"><b>Location</b></label>

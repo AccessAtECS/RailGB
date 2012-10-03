@@ -138,7 +138,7 @@ $queryList = "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 			PREFIX dbpprop:<http://dbpedia.org/property/> 
 			PREFIX tf: <http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#> 
 			
-			select distinct ?name ?address ?phone ?lat ?lng ?zone ?sf
+			select distinct ?station ?name ?address ?phone ?lat ?lng ?zone ?sf
 			where{
 				?station rdf:type tf:TubeStation. 
 				?station rdfs:label ?name. 
