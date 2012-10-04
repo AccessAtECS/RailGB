@@ -395,11 +395,11 @@ function getFaclityAndQuantity(item)
 		name = "Bridge";
 		quantity = parseInt(item.q.value);
 	}
-	else if(p.indexOf("hasWiFi") != -1)
-	{
-		name = "WiFi";
-		quantity = parseInt(item.q.value);
-	}
+	//else if(p.indexOf("hasWiFi") != -1)
+	//{
+	//	name = "WiFi";
+	//	quantity = parseInt(item.q.value);
+	//}
 	
 	if(name != null)
 	{
