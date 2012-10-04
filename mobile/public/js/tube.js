@@ -3,14 +3,16 @@ console.log("load tube.js");
 var map = null;
 var circle = null;
 var currentMarker = null; //the center of current marker
+var cachedData = null;
 var markers = new Array(); //all the markers of tube stations
 var stationsDisplayed = new Array();
+var filterArray = new Array(); //The array to remember the filter selections
 var radius = 1600.0; //1 miles
 
 var currentStationURI = null;
 
 var rs = null;
-var initialLatLong = new google.maps.LatLng(51.508129, -0.128005);
+var initialLatLong = new google.maps.LatLng(51.5077475, -0.08776190000003226);
 
 if (typeof(Number.prototype.toRad) === "undefined") {
 		Number.prototype.toRad = function() {
@@ -64,8 +66,8 @@ function getDistance(station)
 }
 			
 function fireUpStations(stations) {
-	console.log("new markers");
-	clearOverylays(); //clear the marker
+	//console.log("new markers");
+	clearOverylays();
 	stationsDisplayed = new Array();
 	var count = 0;
 	//console.log(stations.results.bindings.length);
@@ -77,18 +79,21 @@ function fireUpStations(stations) {
 			//var image = '/public/img/pins/beachflag.png';
 			var image = "http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag.png";
 			
+			
 			//Yunjia Li: This is deliberate! There is something wrong with the dataset
 			var lng = parseFloat(station.lat.value);
-			var lat = parseFloat(station.lng.value)
-			var marker = new google.maps.Marker({
-				position: new google.maps.LatLng(lat,lng,true),
-				map: map,
-				icon:image,
-				uri: station.station.value,
-				fareZone:station.zone.value,
-				title: station.name.value,
-				draggable: false,
-				visible: true
+			var lat = parseFloat(station.lng.value);
+			var marker;
+			
+			marker = new google.maps.Marker({
+					position: new google.maps.LatLng(lat,lng,true),
+					map: map,
+					icon:image,
+					uri: station.station.value,
+					fareZone:station.zone.value,
+					title: station.name.value,
+					draggable: false,
+					visible: true
 			});
 			
 			if(currentMarker != null)
@@ -139,6 +144,7 @@ function fireUpStations(stations) {
 			count++;
 		});
 		
+		console.log("marker size:"+markers.length);
 		//sort the stations by distance
 		if(stationsDisplayed.length >0)
 		{
@@ -155,27 +161,14 @@ function initialize() {
 	var mapDiv = document.getElementById('map-canvas');
 	console.log(mapDiv);
 	map = new google.maps.Map(mapDiv, {
-		center: new google.maps.LatLng(51.508129, -0.128005),
+		center: initialLatLong,
 		zoom: 12,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
-	// Add "Loading" text here.
-	
-	//console.log(stations);
-	
-	//Commented by Yunjia Li for test
-	//if(typeof sessionStorage.tube == "undefined") {
-		displayStations("Lodon Bridge",function(err,data){
-			sessionStorage.tube = data;
-		});
-		
-	//} 
-	//else {
-	//	fireUpStations(sessionStorage.tube);
-	//}
-	
-	// Clear "Loading" text here
+	displayStations("Lodon Bridge",function(err,data){
+		//Do nothing
+	});
 }
 
 function showStationsCount()
@@ -197,16 +190,11 @@ function showStationsCount()
 function displayStations(address, callback)
 {				
 	radius = parseFloat($("#radius").val())*1600;
-	console.log("radius:"+radius);
-	console.log("address:"+address);
+	//console.log("radius:"+radius);
+	//console.log("address:"+address);
 	stationsDisplayed = new Array();
 	if(address !== undefined && $.trim(address).length >0)
-	{
-		var selected = new Array()
-		$("#filter_div :checkbox:checked").each(function(){
-			selected.push($(this).val());
-		});
-		console.log(selected);
+	{	
 		var geocoder = new google.maps.Geocoder();
 		geocoder.geocode( 
 			{'address': address },
@@ -215,7 +203,7 @@ function displayStations(address, callback)
 				var lat = data[0].geometry.location.Xa;
 				var lng = data[0].geometry.location.Ya;
 				var latlng = new google.maps.LatLng(lat,lng,true);
-				console.log(latlng.toString());
+				//console.log(latlng.toString());
 				//draw a circle
 				if (circle != null) {
 					//console.log("setvisible");
@@ -226,8 +214,8 @@ function displayStations(address, callback)
 				if(currentMarker != null) currentMarker.setMap(null);
 				
 				currentMarker = new google.maps.Marker({
-							map: map,
-							position: latlng,
+						map: map,
+						position: latlng,
 						draggable: false
 					});
 					
@@ -246,38 +234,81 @@ function displayStations(address, callback)
 				map.setCenter(currentMarker.getPosition());
 				//map.fitBounds( circle.getBounds() );
 				
-				//console.log("call");
-				$.ajax({
-					dataType:"json",
-					url: "/public/ajax/tube.php",
-					data:{facility:selected},
-					success:function(data)
+				var selected = new Array()
+				$("#filter_div :checkbox:checked").each(function(){
+					selected.push($(this).val());
+				});
+				console.log("select:"+selected);
+				console.log("filterArray:"+filterArray);
+				//console.log("session:"+cachedData.results);
+				if(($(selected).not(filterArray).length == 0 && $(filterArray).not(selected).length == 0) && cachedData != null)
+				{
+					//use old data
+					fireUpStations(cachedData);
+					
+					if(stationsDisplayed.length >0)
 					{
-						//console.log("successful");
-						fireUpStations(data);
 						
-						if(stationsDisplayed.length >0)
+						var latlngbounds = new google.maps.LatLngBounds( );
+						for ( var i = 0; i < stationsDisplayed.length; i++ ) {
+								latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
+						}
+						map.setCenter(currentMarker.getPosition());
+						map.fitBounds( latlngbounds );
+					}
+					
+					showStationsCount();
+					callback(null, cachedData);
+					return;
+				}
+				else
+				{
+					//send ajax again
+					filterArray = selected;
+					$.ajax({
+						dataType:"json",
+						url: "/public/ajax/tube.php",
+						data:{facility:selected},
+						beforeSend:function(jqXHR, settings){
+							$.mobile.loading( 'show', {
+								text: 'Loading...',
+								textVisible: true,
+								theme: 'd',
+								html: ""
+							});
+						},
+						success:function(data)
 						{
 							
-							var latlngbounds = new google.maps.LatLngBounds( );
-							for ( var i = 0; i < stationsDisplayed.length; i++ ) {
-									latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
+							cachedData = data;
+							fireUpStations(data);
+							
+							if(stationsDisplayed.length >0)
+							{
+								
+								var latlngbounds = new google.maps.LatLngBounds( );
+								for ( var i = 0; i < stationsDisplayed.length; i++ ) {
+										latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
+								}
+								map.setCenter(currentMarker.getPosition());
+								map.fitBounds( latlngbounds );
 							}
-							map.setCenter(currentMarker.getPosition());
-							map.fitBounds( latlngbounds );
+							
+							showStationsCount();
+							callback(null, data);
+							return;
+						},
+						complete:function(jqXHR, textStatus)
+						{
+							$.mobile.loading( 'hide', {
+								text: 'Loading...',
+								textVisible: true,
+								theme: 'd',
+								html: ""
+							});
 						}
-						
-						showStationsCount();
-						callback(null, data);
-						return;
-					}
-				});
-				//Build query sting and make sparql query
-											//$.each(markers, function(i, station) {
-				//	checkDistance(station);
-				//});
-				//set focus if stations are available
-				//console.log("displayed "+stationsDisplayed.length);
+					});
+				}
 			}
 		);
 		
@@ -392,6 +423,8 @@ function getPropertyInfo(item)
 		//o = item.o.value;
 		$("#station_h2").text(item.o.value);
 		$("#station_h4").text(item.o.value);
+		$("#station_thumbnail").attr("alt",item.o.value+" thumbnail");
+		$("#station_depiction").attr("alt",item.o.value+" depiction");
 	}
 	else if(p.indexOf("hasAddress") != -1)
 	{
@@ -498,9 +531,10 @@ $("#search_form").live('submit',function(e){
 
     //run an AJAX post request to your server-side script, $this.serialize() is the data from your form being added to the request
     var address = $("#address").val();
-	displayStations(address,function(){	
+	displayStations(address,function(err,data){	
 		//var result_div = $('#search_result_div');
 		//result_div.html("<span>"+stationsDisplayed.length+" stations found</span>");
+		console.log("callback");
 		$("#search_div").popup('close');
 		var resultStr;
 		if(stationsDisplayed.length >0)
@@ -589,6 +623,11 @@ $('#detail_div').live('pageshow',function(event){
 										if(dbresult.thumbnail.value != undefined)
 										{
 											$("#station_thumbnail").prop("src",data.results.bindings[0].thumbnail.value);
+											$("#station_thumbnail").click(function(){
+												$("#station_depiction_popup").popup("open");
+											});
+											
+											$("#station_depiction").prop("src",data.results.bindings[0].depiction.value);
 										}
 										
 										$("#station_more_content").html(moreStr);

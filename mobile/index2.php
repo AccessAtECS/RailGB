@@ -81,6 +81,7 @@
 				<div data-role="fieldcontain">
 				 	<fieldset data-role="controlgroup">
 				 		<legend>Accessibility:</legend>
+				 		<label><input type="checkbox" name="facility[]" id="filter-sf" value="sf" /> Step-free </label>
 						<label><input type="checkbox" name="facility[]" id="filter-lifts" value="lifts" /> Lifts </label>
 						<label><input type="checkbox" name="facility[]" id="filter-th" value="th" /> Tickets Hall </label>
 						<label><input type="checkbox" name="facility[]" id="filter-es" value="es" /> Escalators </label>
@@ -89,8 +90,6 @@
 						<label><input type="checkbox" name="facility[]" id="filter-hpth" value="hpth" /> Help Points in ticket halls</label>
 						<label><input type="checkbox" name="facility[]" id="filter-hppf" value="hppf" /> Help Points on platforms</label>
 						<label><input type="checkbox" name="facility[]" id="filter-wr" value="wr" /> Waiting Room </label>
-						<label><input type="checkbox" name="facility[]" id="filter-wifi" value="wifi" /> WiFi available </label>
-						<label><input type="checkbox" name="facility[]" id="filter-sf" value="sf" /> Step-free </label>
 				 	</fieldset>
 				</div>
 				<div data-role="collapsible" data-theme="e" data-content-theme="d">
@@ -165,9 +164,12 @@
 									<p id="phone_p"></p>
 									<p id="zone_p"></p>
 									<p class="ui-li-aside" id="sf_p"></p>
-									<img src="/public/img/no-image.jpeg" id="station_thumbnail" style="margin-top:10px;"/>
+									<img src="/public/img/no-image.jpeg" id="station_thumbnail" style="margin-top:10px;" alt=""/>
 								</li>
 							</ul>
+						</div>
+						<div data-role="popup" id="station_depiction_popup" data-overlay-theme="a" data-theme="d" data-corners="false">
+							<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img id="station_depiction" class="popphoto" src="" alt=""/>
 						</div>
 					</div>
 						
@@ -185,7 +187,9 @@
 					</div>
 					<div data-role="collapsible" id="station_more_div">
 						<h3>More Info</h3>
-						<div id="station_more_content"></div>
+						<div id="station_more_content">
+							
+						</div>
 					</div>
 				</div>
 			</div>

@@ -146,8 +146,10 @@ $queryList = "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 				?station tf:hasPhone ?phone. 
 				?station geo:lat ?lat. 
 				?station geo:long ?lng. 
-				?station dbpprop:fareZone ?zone. 
-				?station tf:isStepFreeStation ?sf.
+				optional{
+					?station dbpprop:fareZone ?zone. 
+					?station tf:isStepFreeStation ?sf.
+				}
 				
 				$filter
 			}";
