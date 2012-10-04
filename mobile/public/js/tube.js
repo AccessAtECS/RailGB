@@ -101,19 +101,12 @@ function fireUpStations(stations) {
 				 	stationsDisplayed.push(marker);
 				
 					google.maps.event.addListener(marker, 'click', function(){
-						/* Should be show detailed function
-						$.ajax({
-							dataType:"json",
-							url: "/public/ajax/detail.php",
-							data:{stationURI:marker.uri},
-							success:function(data)
-							{
-								
-							}
-						});*/
 						 
 						 var boxText = $("<div/>").addClass("infobox ui-corner-all").text(marker.title);
 						 var detail_a = $("<a/>").attr("href","#detail_div").attr("data-mini","true").attr("data-role","button").attr("data-icon","arrow-r").attr("data-iconpos","right").attr("data-theme","e").text("details").button();
+						 detail_a.bind('click',{uri:marker.uri},function(event){
+							 currentStationURI = event.data.uri;
+						 });
 						 boxText.append(detail_a);
 						 var ibOptions = {
 							content: boxText.get(0),
@@ -576,11 +569,41 @@ $('#detail_div').live('pageshow',function(event){
 								facilityHasnotStr +="<li>"+name+"</li>";
 							}
 						}
-						else if(item.p.indexOf("sameAS") != -1)//sameAS
+						else if(item.p.value.indexOf("sameAs") != -1)//sameAS
 						{
 							var dbpediaURI = item.o.value;
+							console.log(dbpediaURI);
 							//query dbpedia to get the thumbnail picture
-							//query sameAs.org to get the sameAs json data and display it in more_info
+							$.ajax({
+								dataType:"json",
+								url: "/public/ajax/dbpedia.php",
+								data:{dbpediaURI:dbpediaURI},
+								success:function(data){
+								
+									if(data.results.bindings[0] != undefined)
+									{
+										var dbresult = data.results.bindings[0];
+										var moreStr = ""
+										moreStr += "<p>"+dbresult.abstract.value+"</p>";
+																				
+										if(dbresult.thumbnail.value != undefined)
+										{
+											$("#station_thumbnail").prop("src",data.results.bindings[0].thumbnail.value);
+										}
+										
+										$("#station_more_content").html(moreStr);
+										var wiki_ext_a = $("<a/>",{
+											href: dbresult.pt.value,
+											target:"_blank",
+											text: "More info from Wikipedia"
+										});
+										wiki_ext_a.prop("data-role","button");
+										wiki_ext_a.attr("data-icon","info");
+										wiki_ext_a.button();
+										wiki_ext_a.appendTo($("#station_more_content"));
+									}
+								}
+							});
 						}						
 						else
 						{

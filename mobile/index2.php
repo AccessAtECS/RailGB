@@ -154,7 +154,7 @@
 		
 			<div data-role="content">
 				<h2 id="station_h2"></h2>
-				<div data-role="collapsible-set" data-inset="false" data-theme="d" data-content-theme="d">
+				<div data-role="collapsible-set" data-theme="b" data-content-theme="d">
 					<div data-role="collapsible" data-collapsed="false" id="station_info_div">
 						<h3>Station Info</h3>
 						<div id="station_info_content">
@@ -165,6 +165,7 @@
 									<p id="phone_p"></p>
 									<p id="zone_p"></p>
 									<p class="ui-li-aside" id="sf_p"></p>
+									<img src="/public/img/no-image.jpeg" id="station_thumbnail" style="margin-top:10px;"/>
 								</li>
 							</ul>
 						</div>
