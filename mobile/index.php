@@ -1,420 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<title>Tube London - Accessible London Underground Map</title>
+		<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
 		<?php
 			$path = $_SERVER['DOCUMENT_ROOT'];
 			require_once($path.'/includes/header.php');
 		?>
-		
-		<title>Tube London - Accessible London Underground Map</title>
-		<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-		
-		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-		<script type="text/javascript">
-			var map = null;
-			var circle = null;
-			var currentMarker = null; //the center of current marker
-			var markers = new Array(); //all the markers of tube stations
-			var stationsDisplayed = new Array();
-			var radius = 1600.0; //1 miles
-			
-			var rs = null;
-			var initialLatLong = new google.maps.LatLng(51.508129, -0.128005);
-			
-			if (typeof(Number.prototype.toRad) === "undefined") {
-  				Number.prototype.toRad = function() {
-    				return this * Math.PI / 180;
-  				}
-			}
-			
-			function clearOverylays()
-			{
-				if(markers && markers.length > 0)
-				{
-					for(i in markers)
-					{
-						markers[i].setMap(null);
-					}
-				}
-				markers = new Array();
-			}
-			function checkDistance(station)
-			{
-					//console.log("currentMarker:"+currentMarker);
-					station.setVisible(true);
-					if(currentMarker != null)
-					{
-						//console.log("here");
-						var distance =-1;
-						var lat1 = currentMarker.getPosition().lat();
-						var lat2 = station.getPosition().lat();
-						var lon1 = currentMarker.getPosition().lng();
-						var lon2 = station.getPosition().lng();
-						//console.log("here2");
-						var R = 6371; // Radius of the earth in km
-						var dLat = (lat2-lat1).toRad();
-						var dLon = (lon2-lon1).toRad(); 
-						var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-        					Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
-        					Math.sin(dLon/2) * Math.sin(dLon/2); 
-						var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-						//console.log("here3");
-						//console.log(station.getPosition().toString()+"###"+currentMarker.getPosition().toString());
-						//console.log("distance:"+distance);
-						//console.log("radius:"+radius);
-						distance = R * c *1000; // Distance in Meters
-						//console.log("distance:"+distance);
-         				if(distance <= radius)
-         				{
-         				 	//console.log("within distance:"+station.title);
-         				 	//checkAccessibility(station);
-         				 	return true;
-         				}
-         				else
-         				{
-         				    station.setVisible(false);	
-         				    return false;		
-         				}
-					}
-			}
-						
-			function fireUpStations(stations) {
-				console.log("new markers");
-				clearOverylays();
-				stationsDisplayed = new Array();
-				var count = 0;
-				//console.log(stations.results.bindings.length);
-				$.each(stations.results.bindings, function(i, station) {
-						//console.log(station);
-						//Yunjia: use default marker image first
-						//var hasLift = {value: false, text: 'Not available'};
-						//if(station.hasLift.value === "true") {
-						//	hasLift = {value:true,text:'Lift available'};
-						//	image = '/public/img/pins/wheelchair-ok.png';
-						//} else {
-						//	image = '/public/img/pins/wheelchair-not-ok.png';
-						//}
-						
-						//console.log("hasLift",station.hasLift.value);
-						
-						//Yunjia: change the image later
-						//var image = '/public/img/pins/beachflag.png';
-						var image = "http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag.png";
-						
-						//Yunjia Li: This is deliberate! There is something wrong with the dataset
-						var lng = parseFloat(station.lat.value);
-						var lat = parseFloat(station.lng.value)
-						var marker = new google.maps.Marker({
-							position: new google.maps.LatLng(lat,lng,true),
-							map: map,
-							icon:image,
-							uri: station.station.value,
-							title: station.name.value,
-							draggable: false,
-							visible: true
-						});
-						
-						if(checkDistance(marker))
-						{
-							stationsDisplayed.push(marker);
-						}
-						markers.push(marker);
-						count++;
-						// Marker display box
-						google.maps.event.addListener(marker, 'click', function(){
-							$.ajax({
-								dataType:"json",
-								url: "/public/ajax/detail.php",
-								data:{stationURI:marker.uri},
-								success:function(data)
-								{
-									//console.log("successful");
-									$("#station-name").html(marker.title);
-									//Yunjia: render has or doesn't have div
-									$("#station").show();
-									$("#map-canvas").hide();
-								}
-							});
-							
-						});
-					});
-					$("#alert").html(
-						'<div class="alert alert-success">Showing '+count+' stations.</div>'
-					).show();
-			}
-
-			function initialize() {
-				
-				// Image for each pin
-				//var image = '/public/img/theme/wheelchair-not-ok.png';
-				
-				// Fire up map
-				var mapDiv = document.getElementById('map-canvas');
-				map = new google.maps.Map(mapDiv, {
-					center: new google.maps.LatLng(51.508129, -0.128005),
-					zoom: 12,
-					mapTypeId: google.maps.MapTypeId.ROADMAP
-				});
-				
-				// Add "Loading" text here.
-				
-				//console.log(stations);
-				
-				//Commented by Yunjia Li for test
-				//if(typeof sessionStorage.tube == "undefined") {
-					displayStations("Lodon Bridge",function(err,data){
-						sessionStorage.tube = data;
-					});
-					
-				//} 
-				//else {
-				//	fireUpStations(sessionStorage.tube);
-				//}
-				
-				// Clear "Loading" text here
-			}
-			
-			function showStationsCount()
-			{
-				if(stationsDisplayed.length ==0)
-				{
-					$("#alert").html('<div class="alert alert-warning">'+'No stations have been found.</div>');
-				}
-				else
-				{
-					$("#alert").html(
-						'<div class="alert alert-success">Showing '+stationsDisplayed.length+' stations matching your search.</div>'
-					);
-				}
-				$("#alert").show();
-			}
-						
-			// terrible code-duplicated function to run location lookups
-			
-			function stationsNear(location) {
-					var address = location;
-					$("#address").val(address);
-					$("#radius>option:eq(2)").attr('selected', true);
-					$("#filter-sf").prop("checked", true);
-					
-					displayStations(address);
-					return false;
-			}
-			
-			//callback: the callback function if necessary
-			function displayStations(address, callback)
-			{				
-				radius = parseFloat($("#radius").val())*1600;
-				console.log("radius:"+radius);
-				console.log("address:"+address);
-				stationsDisplayed = new Array();
-				if(address !== undefined && $.trim(address).length >0)
-				{
-					var selected = new Array()
-					$("#form-search :checkbox:checked").each(function(){
-						selected.push($(this).val());
-					});
-					var geocoder = new google.maps.Geocoder();
-					geocoder.geocode( 
-    					{'address': address },
-        				function(data, status) 
-        				{ 
-        					var lat = data[0].geometry.location.Xa;
-							var lng = data[0].geometry.location.Ya;
-							var latlng = new google.maps.LatLng(lat,lng,true);
-							console.log(latlng.toString());
-							//draw a circle
-							if (circle != null) {
-								//console.log("setvisible");
-							    circle.setVisible(false);
-    							circle.setMap(null);
-							}
-							
-							if(currentMarker != null) currentMarker.setMap(null);
-							
-							currentMarker = new google.maps.Marker({
-										map: map,
-										position: latlng,
-									draggable: false
-								});
-								
-							circle = new google.maps.Circle({
-								radius:radius,
-								strokeColor: "#FF0000",
-    							strokeOpacity: 0.8,
-    							strokeWeight: 2,
-    							fillColor: "#FF0000",
-   								fillOpacity: 0.35,
-   								map: map
-							});
-							
-							circle.bindTo('center', currentMarker, 'position');
-							
-							map.setCenter(currentMarker.getPosition());
-							//map.fitBounds( circle.getBounds() );
-							
-							//console.log("call");
-							$.ajax({
-								dataType:"json",
-								url: "/public/ajax/tube.php",
-								data:{facility:selected},
-								success:function(data)
-								{
-									//console.log("successful");
-									fireUpStations(data);
-									
-									if(stationsDisplayed.length >0)
-									{
-										
-										var latlngbounds = new google.maps.LatLngBounds( );
-										for ( var i = 0; i < stationsDisplayed.length; i++ ) {
-												latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
-										}
-										map.setCenter(currentMarker.getPosition());
-										map.fitBounds( latlngbounds );
-									}
-									
-									showStationsCount();
-									callback(null, data);
-									return;
-								}
-							});
-							//Build query sting and make sparql query
-														//$.each(markers, function(i, station) {
-							//	checkDistance(station);
-							//});
-							//set focus if stations are available
-							//console.log("displayed "+stationsDisplayed.length);
-						}
-					);
-					
-				}
-				else
-				{
-					alert("Please input an address or postcode");
-				}
-				return false;
-			}
-			
-			// When ready, fire up the google map. RDF loads when the map is ready.
-			$(function() {
-				google.maps.event.addDomListener(window, 'load', initialize);
-				
-				$("#clear_btn").click(function() {
-					if(circle != null) circle.setMap(null);
-					if(currentMarker != null) currentMarker.setMap(null);
-					
-					map.setCenter(initialLatLong);
-					map.setZoom(10);
-					
-					//Yunjia Li:
-					//$.each(markers, function(i, marker) {
-					//	marker.setVisible(true);
-					//});
-					return false;
-				});
-				
-				$(".locationlookups a").click(function() {
-					return false;
-				});
-				
-				//search nearby
-				$("#search_btn").click(function(){
-					var address = $("#address").val();
-					displayStations(address,function(){
-						//Do nothing
-					});
-				});
-			});
-		</script>
-		
 	</head>
-	
 	<body>
-	
-		<? include_once($path.'/includes/menu.php'); ?>
-		<div class="map-area" id="map-area">
-			<div class="row-fluid">
-				<div id="map-canvas" style="width: 200px; height: 200px"></div>
-				<br />
-				<div id="alert"><div class="alert alert-info">Loading&hellip; <img src="http://www.railgb.org.uk/public/img/loading.gif" style="height: 20px;"/></div></div>
-				
-				<div id="form-div">
-					<form class="form-search" id="form-search">
-						<div class="control-group">
-							<label for="address" class="control-label"><b>Location</b></label>
-							<div class="controls">
-								<input type="text" name="address" id="address" class="input-long" placeholder="Postcode"/>
-							</div>
-							<label for="radius" class="control-label"><b>Search Radius</b></label>
-							<div class="controls">
-								<select id="radius" name="radius">
-									<option value="0.25">0.25 mile</option>
-									<option value="0.5" selected="selected">0.5 miles</option>
-									<option value="1.0">1 miles</option>
-									<option value="2.0">2 miles</option>
-									<option value="5.0">5 miles</option>
-									<option value="10.0">10 miles</option>
-								</select>
-							</div>
-							<br/>
-							<div class="controls">
-									<label><input type="checkbox" name="facility[]" id="filter-lifts" value="lifts" /> Lifts available <img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-								</div>
+		<div data-role="page" id="tubemap_div" data-theme="d" data-title="Tube Map" style="width:100%;height:100%;">
+			<div data-role="header" data-theme="a" data-position="fixed">
+				<h1>Tube Map</h1>
+				<a href="#search_div" data-icon="search" data-theme="d" data-direction="reverse" data-rel="popup" data-transition="slidedown" class="ui-btn-left">Search</a>
+				<a href="#tubelist_div" data-icon="grid" data-theme="d" data-direction="reverse" class="ui-btn-right"  id="list_a">List</a>
+			</div>
+			<div data-theme="d" style="width:100%;height:100%;padding:0">
+				<div id="map-canvas" style="width:100%;height:100%;"></div>
+			</div>
+			<!-- Search Form -->
+			<div data-role="popup" id="search_div">	
+				<div data-role="content" data-theme="d">
+					 <div style="padding:10px 20px;">
+						  <h3>Search</h3>
+						  <form action="/public/ajax/tube.php" method="get" data-ajax="false" id="search_form">
+							  <input type="search" name="address" id="address" value="" data-mini=“true” placeholder="Postcode or Address"/>
+					          <select id="radius" name="radius" data-mini=“true”>
+											<option value="0.25">0.25 miles radius</option>
+											<option value="0.5" selected="selected">0.5 miles radius</option>
+											<option value="1.0">1 miles radius</option>
+											<option value="2.0">2 miles radius</option>
+											<option value="5.0">5 miles radius</option>
+											<option value="10.0">10 miles radius</option>
+							  </select>
+							  <input type="submit" value="Submit" data-theme="b"/>
+						  </form>			
+					 </div>
+			    </div>
+			</div>
+			<!-- /Search Form-->
+			<!-- Search result info form -->
+			<div data-role="popup" id="search_info_div" class="ui-content" data-theme="e" style="max-width:200px;">
+				<p id="search_info_p"></p>
+	        </div>
+			<!-- /Search result info form -->
+			<div data-role="footer" data-theme="d" data-position="fixed" >
+				<div data-role="navbar" >
+					<ul>
+						<li><a class="ui-btn-active ui-state-persist" href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn">Map</a></li>
+						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn">Filter</a></li>
+						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn">About</a></li>
+					</ul>
+				</div>
+			</div>	
+		</div>
+		<!-- /map page -->
+		
+		<!-- filter page -->
+		<div data-role="page" id="filter_div" data-title="Fitler">
+			<div data-role="header" data-theme="a">
+				<h1>Filter</h1>
+				<a href="#tubemap_div" data-theme="d" data-rel="back" data-direction="reverse" class="ui-btn-left" data-icon="arrow-l">Back</a>			
+				<!-- TODO: Add a reset Button -->
+				<!-- TODO: use cookie to remember user's choices on this phone -->
+			</div>
+			<div data-role="content">
+				<div data-role="fieldcontain">
+				    <fieldset data-role="controlgroup">
+				       <legend>You are:</legend>
+					   <input type="checkbox" name="wheelchair" id="wheelchair" class="custom" />
+					   <label for="wheelchair">Wheelchair user</label>
+					   
+					   <input type="checkbox" name="blind" id="blind" class="custom" />
+					   <label for="blind">Visual impair (blind)</label>
 
-								<div class="controls">
-									<label><input type="checkbox" name="facility[]" id="filter-th" value="th" /> Tickets Hall available <img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-								</div>
-								<div class="controls">
-									<label><input type="checkbox" name="facility[]" id="filter-es" value="es" /> Escalators available <img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-								</div>
-								<div class="controls">
-									<label><input type="checkbox" name="facility[]" id="filter-to" value="to" /> Toilets available <img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-								</div>
-								
-								<div class="controls">
-									<label><input type="checkbox" name="facility[]" id="filter-cp" value="cp" /> Car Park available <img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-								</div>
-								
-								<div class="controls">
-									<label><input type="checkbox" name="facility[]" id="filter-hpth" value="hpth" /> Help Points available in ticket halls<img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-								</div>
-								<div class="controls">
-									<label><input type="checkbox" name="facility[]" id="filter-hppf" value="hppf" /> Help Points available on platforms<img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-								</div>
-																<div class="controls">
-									<label><input type="checkbox" name="facility[]" id="filter-wr" value="wr" /> Waiting Room available <img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-								</div>
-								
-								<div class="controls">
-									<label><input type="checkbox" name="facility[]" id="filter-wifi" value="wifi" /> WiFi available <img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-								</div>
-								<div class="controls">
-									<label><input type="checkbox" name="facility[]" id="filter-sf" value="sf" /> Step Free <img src="/public/img/fugue/ticket-1.png" alt="ticket office" /></label><br />
-								</div>
-
+				    </fieldset>
+				</div>
+				<div data-role="fieldcontain">
+				 	<fieldset data-role="controlgroup">
+				 		<legend>Accessibility:</legend>
+				 		<label><input type="checkbox" name="facility[]" id="filter-sf" value="sf" /> Step-free </label>
+						<label><input type="checkbox" name="facility[]" id="filter-lifts" value="lifts" /> Lifts </label>
+						<label><input type="checkbox" name="facility[]" id="filter-th" value="th" /> Tickets Hall </label>
+						<label><input type="checkbox" name="facility[]" id="filter-es" value="es" /> Escalators </label>
+						<label><input type="checkbox" name="facility[]" id="filter-to" value="to" /> Toilets </label>
+						<label><input type="checkbox" name="facility[]" id="filter-cp" value="cp" /> Car Park </label>
+						<label><input type="checkbox" name="facility[]" id="filter-hpth" value="hpth" /> Help Points in ticket halls</label>
+						<label><input type="checkbox" name="facility[]" id="filter-hppf" value="hppf" /> Help Points on platforms</label>
+						<label><input type="checkbox" name="facility[]" id="filter-wr" value="wr" /> Waiting Room </label>
+				 	</fieldset>
+				</div>
+				<div data-role="collapsible" data-theme="e" data-content-theme="d">
+				   <h3>Other Facilities</h3>
+				   <p>
+				   <div data-role="fieldcontain">
+					 	<fieldset data-role="controlgroup">
+							<label><input type="checkbox" name="facility[]" id="filter-gates" value="gates" /> Gates </label>
+							<label><input type="checkbox" name="facility[]" id="filter-pb" value="pb" /> Photo Booths </label>
+							<label><input type="checkbox" name="facility[]" id="filter-cm" value="cm" /> Cash Machine </label>
+							<label><input type="checkbox" name="facility[]" id="filter-pp" value="pp" /> Payphones </label>
+							<label><input type="checkbox" name="facility[]" id="filter-vm" value="vm" /> Vending Machines </label>
+							<label><input type="checkbox" name="facility[]" id="filter-br" value="br" /> Bridge </label>
+					 	</fieldset>
+					</div>
+				   </p>	
+				</div>
+							
+			</div>
+			
+			<div data-role="footer" data-theme="d" data-position="fixed" >
+				<div data-role="navbar" >
+					<ul>
+						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn">Map</a></li>
+						<li><a class="ui-btn-active ui-state-persist" href="#filter_div" data-role="button" data-theme="d" id="filter_btn">Filter</a></li>
+						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn">About</a></li>
+					</ul>
+				</div>
+			</div>	
+		</div>
+		<!-- /filter page -->
+		
+		<!-- tubelist page -->
+		<div data-role="page" id="tubelist_div" data-title="Tube List">
+			<div data-role="header" data-theme="a">
+				<h1>List of Tube Stations</h1>
+				<a href="#tubemap_div" data-theme="d" data-rel="back" data-direction="reverse" class="ui-btn-left" data-icon="arrow-l">Back</a>			
+			</div>
+			<div data-role="content">
+				<ul id="tubelist_ul" data-role="listview" data-filter="true" data-filter-placeholder="Filter stations...">
+				</ul>
+			</div>
+			<div data-role="footer" data-theme="d" data-position="fixed" >
+				<div data-role="navbar" >
+					<ul>
+						<li><a class="ui-btn-active ui-state-persist" href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn">Map</a></li>
+						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn">Filter</a></li>
+						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn">About</a></li>
+					</ul>
+				</div>
+			</div>	
+		</div>
+		<!-- /tubelist page -->
+		
+		<!-- detail page : display the detailed information of a tube station-->
+		<div data-role="page" id="detail_div" data-theme="d" data-title="Station Detail">
+			<div data-role="header" data-theme="a">
+				<h1>Station Detail</h1>
+				<a href="#tubemap_div" data-theme="d" data-rel="back" data-direction="reverse" class="ui-btn-left" data-icon="arrow-l">Back</a>
+			</div>
+		
+			<div data-role="content">
+				<h2 id="station_h2"></h2>
+				<div data-role="collapsible-set" data-theme="b" data-content-theme="d">
+					<div data-role="collapsible" data-collapsed="false" id="station_info_div">
+						<h3>Station Info</h3>
+						<div id="station_info_content">
+							<ul data-role="listview" data-theme="d" data-divider-theme="d" id="station_info_ul_content">
+								<li>
+									<h4 id="station_h4"></h4>
+									<p id="address_p"></p>
+									<p id="phone_p"></p>
+									<p id="zone_p"></p>
+									<p class="ui-li-aside" id="sf_p"></p>
+									<img src="/public/img/no-image.jpeg" id="station_thumbnail" style="margin-top:10px;" alt=""/>
+								</li>
+							</ul>
 						</div>
-					</form>
-					<button class="btn btn-primary" id="search_btn" type="submit">Search</button>
-					<a class="btn pull-right" id="clear_btn" href="#" onclick="return false">Clear Results</a>
+						<div data-role="popup" id="station_depiction_popup" data-overlay-theme="a" data-theme="d" data-corners="false">
+							<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img id="station_depiction" class="popphoto" src="" alt=""/>
+						</div>
+					</div>
+						
+					<div data-role="collapsible" id="station_facility_div_yes">
+						<h3>Facilities Available</h3>
+						<div id="station_facility_content_yes">
+							<ul id="station_facility_content_ul_yes" data-role="listview"></ul>
+						</div>
+					</div>
+					<div data-role="collapsible" id="station_facility_div_yes">
+						<h3>Facilities Not Available</h3>
+						<div id="station_facility_content_no">
+							<ul id="station_facility_content_ul_no" data-role="listview"></ul>
+						</div>
+					</div>
+					<div data-role="collapsible" id="station_more_div">
+						<h3>More Info</h3>
+						<div id="station_more_content">
+							
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
 		
-		<div class="station-area" style="display:none" id="station-area">
-			<div id="station">
-				<h4 id="station-name"></h4>
-				<div id="station-innerticket">
-					<p>This station has</p>
-					<p>This station doesn't have</p>
+			<div data-role="footer" data-theme="d" data-position="fixed" >
+				<div data-role="navbar" >
+					<ul>
+						<li><a class="ui-btn-active ui-state-persist" href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn">Map</a></li>
+						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn">Filter</a></li>
+						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn">About</a></li>
+					</ul>
 				</div>
-				<div id="station-footer"><img src="http://www.railgb.org.uk/public/img/theme/ticket-logo.png" alt='National Rail' /></div>
-			</div>
+			</div>	
 		</div>
+		<!-- /Filter page -->
 		
+		<!-- About page : about this application-->
+		<div data-role="page" id="about_div" data-title="About">
+			<div data-role="header" data-theme="a">
+				<h1>About</h1>
+				<a href="#tubemap_div" data-theme="d" data-rel="back" data-direction="reverse" class="ui-btn-left"  data-icon="arrow-l">Back</a>
+			</div>
 		
-		<script>
-			$("#map-canvas").css("width", "100%");
-		</script>
+			<div data-role="content">
+				
+			</div>
+		
+			<div data-role="footer" data-theme="d" data-position="fixed" >
+				<div data-role="navbar" >
+					<ul>
+						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn">Map</a></li>
+						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn">Filter</a></li>
+						<li><a class="ui-btn-active ui-state-persist" href="#about_div" data-role="button" data-theme="d" id="about_btn">About</a></li>
+					</ul>
+				</div>
+			</div>	
+		
+		</div>
+		<!-- /About page -->
 	</body>
 </html>
