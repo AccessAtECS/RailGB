@@ -151,10 +151,42 @@
 				<h1>Station Detail</h1>
 				<a href="#tubemap_div" data-theme="d" data-rel="back" data-direction="reverse" class="ui-btn-left" data-icon="arrow-l">Back</a>
 			</div>
-			</div>
 		
 			<div data-role="content">
-				
+				<h2 id="station_h2"></h2>
+				<div data-role="collapsible-set" data-inset="false" data-theme="d" data-content-theme="d">
+					<div data-role="collapsible" data-collapsed="false" id="station_info_div">
+						<h3>Station Info</h3>
+						<div id="station_info_content">
+							<ul data-role="listview" data-theme="d" data-divider-theme="d" id="station_info_ul_content">
+								<li>
+									<h4 id="station_h4"></h4>
+									<p id="address_p"></p>
+									<p id="phone_p"></p>
+									<p id="zone_p"></p>
+									<p class="ui-li-aside" id="sf_p"></p>
+								</li>
+							</ul>
+						</div>
+					</div>
+						
+					<div data-role="collapsible" id="station_facility_div_yes">
+						<h3>Facilities Available</h3>
+						<div id="station_facility_content_yes">
+							<ul id="station_facility_content_ul_yes" data-role="listview"></ul>
+						</div>
+					</div>
+					<div data-role="collapsible" id="station_facility_div_yes">
+						<h3>Facilities Not Available</h3>
+						<div id="station_facility_content_no">
+							<ul id="station_facility_content_ul_no" data-role="listview"></ul>
+						</div>
+					</div>
+					<div data-role="collapsible" id="station_more_div">
+						<h3>More Info</h3>
+						<div id="station_more_content"></div>
+					</div>
+				</div>
 			</div>
 		
 			<div data-role="footer" data-theme="d" data-position="fixed" >

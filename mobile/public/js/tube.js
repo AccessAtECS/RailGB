@@ -7,6 +7,8 @@ var markers = new Array(); //all the markers of tube stations
 var stationsDisplayed = new Array();
 var radius = 1600.0; //1 miles
 
+var currentStationURI = null;
+
 var rs = null;
 var initialLatLong = new google.maps.LatLng(51.508129, -0.128005);
 
@@ -294,6 +296,135 @@ function displayStations(address, callback)
 	return false;
 }
 
+function getFaclityAndQuantity(item)
+{
+	var p = item.p.value;
+	var name = null;
+	var quantity = 0;
+	if(p.indexOf("hasLifts") != -1)
+	{
+		name = "Lifts";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasWaitingRoom") != -1)
+	{
+		name = "Waiting Room";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasTicketHalls") != -1)
+	{
+		name = "Ticket Halls";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasEscalators") != -1)
+	{
+		name = "Escalators";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasGates") != -1)
+	{
+		name = "Gates";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasToilets") != -1)
+	{
+		name = "Toilets";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasPhotoBooths") != -1)
+	{
+		name = "Photo Booths";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasCashMachines") != -1)
+	{
+		name = "Cash Machines";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasPayphones") != -1)
+	{
+		name = "Payphones";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasCarPark") != -1)
+	{
+		name = "Car Park";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasVendingMachines") != -1)
+	{
+		name = "Vending Machines";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasHelpPointsInTicketHalls") != -1)
+	{
+		name = "Help Points in Ticket Halls";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasHelpPointsOnPlatforms") != -1)
+	{
+		name = "Help Points on Platforms";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasBridge") != -1)
+	{
+		name = "Bridge";
+		quantity = parseInt(item.q.value);
+	}
+	else if(p.indexOf("hasWiFi") != -1)
+	{
+		name = "WiFi";
+		quantity = parseInt(item.q.value);
+	}
+	
+	if(name != null)
+	{
+		var result = new Object();
+		result.name = name;
+		result.quantity = quantity;
+		return result;
+	}
+	else
+		return null;
+}
+
+function getPropertyInfo(item)
+{
+	var p = item.p.value;
+	var name = null;
+	var o = "";
+	if(p.indexOf("label") != -1)
+	{
+		//name = "StationName";
+		//o = item.o.value;
+		$("#station_h2").text(item.o.value);
+		$("#station_h4").text(item.o.value);
+	}
+	else if(p.indexOf("hasAddress") != -1)
+	{
+		$("#address_p").html("<strong>Address:</strong>"+item.o.value);
+	}
+	else if(p.indexOf("hasPhone") != -1)
+	{
+		$("#phone_p").html("<strong>Phone:</strong>"+item.o.value);
+	}
+	else if(p.indexOf("fareZone") != -1)
+	{
+		$("#zone_p").html("<strong>Zone "+item.o.value+"</strong>");
+	}
+	else if(p.indexOf("isStepFreeStation") != -1)
+	{
+		if(item.o.value == "false")
+		{
+			$("#sf_p").text("Not step-free");
+		}
+		else
+		{
+			$("#sf_p").text("Step-free");
+		}
+	}
+}
+
 //####################JQuery Mobile Methods##########################
 $( document ).bind( 'mobileinit', function(){
 	$.mobile.loader.prototype.options.text = "loading";
@@ -312,6 +443,32 @@ $('#tubemap_div').live('pageshow', function(event) {
 				
 });
 
+$('#filter_div').live('pageinit',function(event){
+	$('#filter_div #wheelchair').change(function() {
+		console.log("change");
+        if($(this).is(":checked")) {
+            $("#filter-sf").prop("checked",true).checkboxradio('refresh');
+        }
+        else
+        {
+	        console.log("change2");
+	        $("#filter-sf").prop("checked",false).checkboxradio('refresh');
+        }      
+    });	
+    
+    $('#filter_div #blind').change(function() {
+        if($(this).is(":checked")) {
+            $("#filter-hpth").prop("checked",true).checkboxradio('refresh');
+            $("#filter-hppf").prop("checked",true).checkboxradio('refresh');
+        }
+        else
+        {
+	        $("#filter-hpth").prop("checked",false).checkboxradio('refresh');
+            $("#filter-hppf").prop("checked",false).checkboxradio('refresh');
+        }       
+    });
+});
+
 $('#tubelist_div').live('pageshow', function(event) {
 	var tubelist_ul = $("#tubelist_ul");
 	tubelist_ul.empty();
@@ -326,6 +483,9 @@ $('#tubelist_div').live('pageshow', function(event) {
 					"<p><strong>Zone "+station.fareZone+"</strong></p>"+
 					"<p class='ui-li-aside'><strong>"+Math.floor(distance)+" m</strong></p>"
 			}).appendTo(station_li);
+			station_a.bind('click',{uri:station.uri},function(event){
+				currentStationURI = event.data.uri;
+			});
 		});
 		
 		tubelist_ul.listview('refresh');
@@ -335,7 +495,6 @@ $('#tubelist_div').live('pageshow', function(event) {
 		tubelist_ul.html("<b>No station is found</b>");
 	}				
 });
-
 
 $("#search_form").live('submit',function(e){
 	//cache the form element for use in this function
@@ -376,3 +535,81 @@ $("#search_form").live('submit',function(e){
 		}, 1000)	
 	});
 });
+
+$('#detail_div').live('pageshow',function(event){
+	if(currentStationURI !=null)
+	{
+		$.ajax({
+			dataType:"json",
+			url: "/public/ajax/detail.php",
+			data:{stationURI:currentStationURI},
+			beforeSend:function(jqXHR, settings){
+				$.mobile.loading( 'show', {
+					text: 'Loading...',
+					textVisible: true,
+					theme: 'd',
+					html: ""
+				});
+    
+			},
+			success:function(data)
+			{
+				if(data.results.bindings.length > 0)
+				{
+					var facilityHasStr = "";
+					var facilityHasnotStr = "";
+					var stationInfoStr = "";
+					$.each(data.results.bindings,function(i,item){
+						var result = getFaclityAndQuantity(item);
+						if(result != null)
+						{
+							var name = result.name;
+							var quantity = result.quantity;
+							//console.log("name:"+name);
+							//console.log("quantity:"+quantity);
+							if(quantity > 0)
+							{
+								facilityHasStr +="<li>"+name+"<span class='ui-li-count'>"+quantity+"</span></li>";
+							}
+							else
+							{
+								facilityHasnotStr +="<li>"+name+"</li>";
+							}
+						}
+						else if(item.p.indexOf("sameAS") != -1)//sameAS
+						{
+							var dbpediaURI = item.o.value;
+							//query dbpedia to get the thumbnail picture
+							//query sameAs.org to get the sameAs json data and display it in more_info
+						}						
+						else
+						{
+							getPropertyInfo(item);
+						}
+					});
+					
+					$("#station_facility_content_ul_yes").html(facilityHasStr);
+					$("#station_facility_content_ul_yes").listview('refresh');
+					$("#station_facility_content_ul_no").html(facilityHasnotStr);
+					$("#station_facility_content_ul_no").listview('refresh');
+				}
+				else
+				{
+					$("#station_info_content").text("No information is found");
+					$("#station_facility_content").html("No information is found");
+					$("#station_more_content").text("No information is found");
+				}
+			},
+			complete:function(jqXHR, textStatus)
+			{
+				$.mobile.loading( 'hide', {
+					text: 'Loading...',
+					textVisible: true,
+					theme: 'd',
+					html: ""
+				});
+			}
+		});
+	}
+});
+
