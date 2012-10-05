@@ -49,9 +49,11 @@
 			<div data-role="footer" data-theme="d" data-position="fixed" >
 				<div data-role="navbar" >
 					<ul>
-						<li><a class="ui-btn-active ui-state-persist" href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn">Map</a></li>
-						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn">Filter</a></li>
-						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn">About</a></li>
+						<li><a class="ui-btn-active ui-state-persist" href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true"><img src="/public/img/map.png" /><br />Map</a></li>
+						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true"><img src="/public/img/filter.png" /><br />Filter</a></li>
+						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true"><img src="/public/img/quick-places.png" /><br />Places</a></li>
+						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true"><img src="/public/img/help.png" /><br />Help</a></li>
+						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true"><img src="/public/img/about.png" /><br />About</a></li>
 					</ul>
 				</div>
 			</div>	
@@ -113,9 +115,11 @@
 			<div data-role="footer" data-theme="d" data-position="fixed" >
 				<div data-role="navbar" >
 					<ul>
-						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn">Map</a></li>
-						<li><a class="ui-btn-active ui-state-persist" href="#filter_div" data-role="button" data-theme="d" id="filter_btn">Filter</a></li>
-						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn">About</a></li>
+						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true"><img src="/public/img/map.png" /><br />Map</a></li>
+						<li><a class="ui-btn-active ui-state-persist" href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true"><img src="/public/img/filter.png" /><br />Filter</a></li>
+						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true"><img src="/public/img/quick-places.png" /><br />Places</a></li>
+						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true"><img src="/public/img/help.png" /><br />Help</a></li>
+						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true"><img src="/public/img/about.png" /><br />About</a></li>
 					</ul>
 				</div>
 			</div>	
@@ -135,9 +139,11 @@
 			<div data-role="footer" data-theme="d" data-position="fixed" >
 				<div data-role="navbar" >
 					<ul>
-						<li><a class="ui-btn-active ui-state-persist" href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn">Map</a></li>
-						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn">Filter</a></li>
-						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn">About</a></li>
+						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true"><img src="/public/img/map.png" /><br />Map</a></li>
+						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true"><img src="/public/img/filter.png" /><br />Filter</a></li>
+						<li><a class="ui-btn-active ui-state-persist" href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true"><img src="/public/img/quick-places.png" /><br />Places</a></li>
+						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true"><img src="/public/img/help.png" /><br />Help</a></li>
+						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true"><img src="/public/img/about.png" /><br />About</a></li>
 					</ul>
 				</div>
 			</div>	
@@ -197,9 +203,11 @@
 			<div data-role="footer" data-theme="d" data-position="fixed" >
 				<div data-role="navbar" >
 					<ul>
-						<li><a class="ui-btn-active ui-state-persist" href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn">Map</a></li>
-						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn">Filter</a></li>
-						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn">About</a></li>
+						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true"><img src="/public/img/map.png" /><br />Map</a></li>
+						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true"><img src="/public/img/filter.png" /><br />Filter</a></li>
+						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true"><img src="/public/img/quick-places.png" /><br />Places</a></li>
+						<li><a class="ui-btn-active ui-state-persist" href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true"><img src="/public/img/help.png" /><br />Help</a></li>
+						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true"><img src="/public/img/about.png" /><br />About</a></li>
 					</ul>
 				</div>
 			</div>	
@@ -220,9 +228,11 @@
 			<div data-role="footer" data-theme="d" data-position="fixed" >
 				<div data-role="navbar" >
 					<ul>
-						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn">Map</a></li>
-						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn">Filter</a></li>
-						<li><a class="ui-btn-active ui-state-persist" href="#about_div" data-role="button" data-theme="d" id="about_btn">About</a></li>
+						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true"><img src="/public/img/map.png" /><br />Map</a></li>
+						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true"><img src="/public/img/filter.png" /><br />Filter</a></li>
+						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true"><img src="/public/img/quick-places.png" /><br />Places</a></li>
+						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true"><img src="/public/img/help.png" /><br />Help</a></li>
+						<li><a class="ui-btn-active ui-state-persist" href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true"><img src="/public/img/about.png" /><br />About</a></li>
 					</ul>
 				</div>
 			</div>	

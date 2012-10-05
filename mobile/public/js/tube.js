@@ -162,7 +162,7 @@ function initialize() {
 	console.log(mapDiv);
 	map = new google.maps.Map(mapDiv, {
 		center: initialLatLong,
-		zoom: 12,
+
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
