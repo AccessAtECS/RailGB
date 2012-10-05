@@ -139,9 +139,9 @@
 			<div data-role="footer" data-theme="d" data-position="fixed" >
 				<div data-role="navbar" >
 					<ul>
-						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true"><img src="/public/img/map.png" /><br />Map</a></li>
+						<li><a class="ui-btn-active ui-state-persist" href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true"><img src="/public/img/map.png" /><br />Map</a></li>
 						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true"><img src="/public/img/filter.png" /><br />Filter</a></li>
-						<li><a class="ui-btn-active ui-state-persist" href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true"><img src="/public/img/quick-places.png" /><br />Places</a></li>
+						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true"><img src="/public/img/quick-places.png" /><br />Places</a></li>
 						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true"><img src="/public/img/help.png" /><br />Help</a></li>
 						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true"><img src="/public/img/about.png" /><br />About</a></li>
 					</ul>
@@ -213,6 +213,63 @@
 			</div>	
 		</div>
 		<!-- /Filter page -->
+		
+		<!-- Places page -->
+		<div data-role="page" id="places_div" data-title="Quick Places">
+			<div data-role="header" data-theme="a">
+				<h1>Quick Places</h1>
+				<a href="#tubemap_div" data-theme="d" data-rel="back" data-direction="reverse" class="ui-btn-left" data-icon="arrow-l">Back</a>			
+			</div>
+			<div data-role="content">
+				<ul id="tubelist_ul" data-role="listview" data-filter="true" data-filter-placeholder="Filter Places...">
+					<li><a href='#tubemap_div' onclick='displayStations("SE16 3TP",afterSearch)'>City Mobility</a></li>
+					<li><a href='#tubemap_div' onclick='displayStations("SW1W 0DH",afterSearch)'>Dyslexia Action</a></li>
+					<li><a href='#tubemap_div' onclick='displayStations("WC1N 3JH",afterSearch)'>Great Ormond Street Hospital for Children</a></li>
+					<li><a href='#tubemap_div' onclick='displayStations("SW7 5BD",afterSearch)'>Natural History Museum</a></li>
+					<li><a href='#tubemap_div' onclick='displayStations("WC1H 9NE",afterSearch)'>RNIB</a></li>
+					<li><a href='#tubemap_div' onclick='displayStations("WC2R 0EU",afterSearch)'>The Savoy</a></li>
+					<li><a href='#tubemap_div' onclick='displayStations("SW7 2DD",afterSearch)'>Science Museum</a></li>
+					<li><a href='#tubemap_div' onclick='displayStations("N7 9PW",afterSearch)'>Scope</a></li>
+					<li><a href='#tubemap_div' onclick='displayStations("SE1 7EH",afterSearch)'>St. Thomas' Hospital</a></li>
+					<li><a href='#tubemap_div' onclick='displayStations("EC1Y 8SL",afterSearch)'>Action on Hearing Loss</a></li>
+				</ul>
+			</div>
+			<div data-role="footer" data-theme="d" data-position="fixed" >
+				<div data-role="navbar" >
+					<ul>
+						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true"><img src="/public/img/map.png" /><br />Map</a></li>
+						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true"><img src="/public/img/filter.png" /><br />Filter</a></li>
+						<li><a class="ui-btn-active ui-state-persist" href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true"><img src="/public/img/quick-places.png" /><br />Places</a></li>
+						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true"><img src="/public/img/help.png" /><br />Help</a></li>
+						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true"><img src="/public/img/about.png" /><br />About</a></li>
+					</ul>
+				</div>
+			</div>	
+		</div>
+		<!-- /Places page -->
+		
+		<!-- Help page -->
+		<div data-role="page" id="help_div" data-title="Help">
+			<div data-role="header" data-theme="a">
+				<h1>Help</h1>
+				<a href="#tubemap_div" data-theme="d" data-rel="back" data-direction="reverse" class="ui-btn-left" data-icon="arrow-l">Back</a>			
+			</div>
+			<div data-role="content">
+				<h2>Help</h2>
+			</div>
+			<div data-role="footer" data-theme="d" data-position="fixed" >
+				<div data-role="navbar" >
+					<ul>
+						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true"><img src="/public/img/map.png" /><br />Map</a></li>
+						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true"><img src="/public/img/filter.png" /><br />Filter</a></li>
+						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true"><img src="/public/img/quick-places.png" /><br />Places</a></li>
+						<li><a class="ui-btn-active ui-state-persist" href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true"><img src="/public/img/help.png" /><br />Help</a></li>
+						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true"><img src="/public/img/about.png" /><br />About</a></li>
+					</ul>
+				</div>
+			</div>	
+		</div>
+		<!-- /Help page -->
 		
 		<!-- About page : about this application-->
 		<div data-role="page" id="about_div" data-title="About">

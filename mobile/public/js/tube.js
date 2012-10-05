@@ -162,7 +162,7 @@ function initialize() {
 	console.log(mapDiv);
 	map = new google.maps.Map(mapDiv, {
 		center: initialLatLong,
-
+		zoom:16,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	});
 	
@@ -451,6 +451,35 @@ function getPropertyInfo(item)
 	}
 }
 
+function afterSearch(err,data)
+{
+	$("#search_div").popup('close');
+	var resultStr;
+	if(stationsDisplayed.length >0)
+	{
+		resultStr = "<p><b>"+stationsDisplayed.length+"</b> stations found. </p>";
+		//$("#list_a").text("List("+stationsDisplayed.length+")");
+		$("#list_a").show();
+	}
+	else
+	{
+		resultStr = "<p>No station found. </p>";
+		$("#list_a").hide();
+	}
+	$("#search_info_p").html(resultStr);
+	
+	//TODO: let it position to tubelist_div, it doens't work
+	window.setTimeout(function(){
+		$("#search_info_div").popup("open",{
+			positionTo:"#tubelist_div",
+			transition:'fade'
+		});
+		window.setTimeout(function(){
+			$("#search_info_div").popup("close");
+		}, 2000)
+	}, 1000);	
+}
+
 //####################JQuery Mobile Methods##########################
 $( document ).bind( 'mobileinit', function(){
 	$.mobile.loader.prototype.options.text = "loading";
@@ -531,36 +560,7 @@ $("#search_form").live('submit',function(e){
 
     //run an AJAX post request to your server-side script, $this.serialize() is the data from your form being added to the request
     var address = $("#address").val();
-	displayStations(address,function(err,data){	
-		//var result_div = $('#search_result_div');
-		//result_div.html("<span>"+stationsDisplayed.length+" stations found</span>");
-		console.log("callback");
-		$("#search_div").popup('close');
-		var resultStr;
-		if(stationsDisplayed.length >0)
-		{
-			resultStr = "<p><b>"+stationsDisplayed.length+"</b> stations found. </p>";
-			//$("#list_a").text("List("+stationsDisplayed.length+")");
-			$("#list_a").show();
-		}
-		else
-		{
-			resultStr = "<p>No station found. </p>";
-			$("#list_a").hide();
-		}
-		$("#search_info_p").html(resultStr);
-		
-		//TODO: let it position to tubelist_div, it doens't work
-		window.setTimeout(function(){
-			$("#search_info_div").popup("open",{
-				positionTo:"#tubelist_div",
-				transition:'fade'
-			});
-			window.setTimeout(function(){
-				$("#search_info_div").popup("close");
-			}, 2000)
-		}, 1000)	
-	});
+	displayStations(address,afterSearch);	
 });
 
 $('#detail_div').live('pageshow',function(event){
