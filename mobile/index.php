@@ -223,7 +223,7 @@
 			<div data-role="content">
 				<ul id="tubelist_ul" data-role="listview" data-filter="true" data-filter-placeholder="Filter Places...">
 					<li><a href='#tubemap_div' onclick='displayStations("SE16 3TP",afterSearch)'>City Mobility</a></li>
-					<li><a href='#tubemap_div' onclick='displayStations("SW1W 0DH",afterSearch)'>Dyslexia Action</a></li>
+					<li><a href='#tubemap_div' onclick='$("#address").val("SW1W 0DH");$("#search_form").submit();'>Dyslexia Action</a></li>
 					<li><a href='#tubemap_div' onclick='displayStations("WC1N 3JH",afterSearch)'>Great Ormond Street Hospital for Children</a></li>
 					<li><a href='#tubemap_div' onclick='displayStations("SW7 5BD",afterSearch)'>Natural History Museum</a></li>
 					<li><a href='#tubemap_div' onclick='displayStations("WC1H 9NE",afterSearch)'>RNIB</a></li>

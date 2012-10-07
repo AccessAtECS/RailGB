@@ -189,6 +189,7 @@ function showStationsCount()
 //callback: the callback function if necessary
 function displayStations(address, callback)
 {				
+	console.log("displayStations");
 	radius = parseFloat($("#radius").val())*1600;
 	//console.log("radius:"+radius);
 	//console.log("address:"+address);
@@ -238,8 +239,8 @@ function displayStations(address, callback)
 				$("#filter_div :checkbox:checked").each(function(){
 					selected.push($(this).val());
 				});
-				console.log("select:"+selected);
-				console.log("filterArray:"+filterArray);
+				//console.log("select:"+selected);
+				//console.log("filterArray:"+filterArray);
 				//console.log("session:"+cachedData.results);
 				if(($(selected).not(filterArray).length == 0 && $(filterArray).not(selected).length == 0) && cachedData != null)
 				{
@@ -489,13 +490,20 @@ $( document ).bind( 'mobileinit', function(){
 	
 	$.mobile.page.prototype.options.backBtnTheme    = "d";
 });
-					
-$('#tubemap_div').live('pageshow', function(event) {
-	console.log("tubemap init");
+
+$('#tubemap_div').live('pageinit',function(event){
 	
+	console.log("tubemap init");
 	//TODO: Customise the navigation controls
 	google.maps.event.addDomListener(window, 'load', initialize);
-				
+});
+					
+$('#tubemap_div').live('pageshow', function(event) {
+	console.log("tubemap show");
+	if($("#address").val() != "")
+	{
+		displayStations($("#address").val(), afterSearch);
+	}			
 });
 
 $('#filter_div').live('pageinit',function(event){
