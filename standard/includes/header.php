@@ -1,3 +1,4 @@
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 <link rel="icon" href="/public/img/theme/favicon.png" type="image/x-icon">
 <link href="/public/css/bootstrap.css" rel="stylesheet">
 <link href="/public/css/bootstrap-responsive.css" rel="stylesheet">
