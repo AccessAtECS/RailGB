@@ -76,9 +76,7 @@ function fireUpStations(stations) {
 			//console.log("hasLift",station.hasLift.value);
 			
 			//Yunjia: change the image later
-			//var image = '/public/img/pins/beachflag.png';
-			var image = "http://code.google.com/apis/maps/documentation/javascript/examples/images/beachflag.png";
-			
+			var image = new google.maps.MarkerImage("/public/img/station.png", null, null, null, new google.maps.Size(84,50));
 			
 			//Yunjia Li: This is deliberate! There is something wrong with the dataset
 			var lng = parseFloat(station.lat.value);
