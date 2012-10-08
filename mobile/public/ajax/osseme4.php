@@ -13,7 +13,7 @@ $query= "PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 		PREFIX pc: <http://data.ordnancesurvey.co.uk/ontology/postcode/> 
 		PREFIX os: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/>
 
-SELECT ?place ?label ?pclabel WHERE {
+SELECT distinct ?place ?label ?pclabel WHERE {
 
   ?place rdf:type gaz:NamedPlace ;
              rdfs:label ?label ;
