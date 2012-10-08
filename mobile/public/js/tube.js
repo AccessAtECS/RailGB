@@ -159,7 +159,6 @@ function initialize() {
 	
 	// Fire up map
 	var mapDiv = document.getElementById('map-canvas');
-	console.log(mapDiv);
 	map = new google.maps.Map(mapDiv, {
 		center: initialLatLong,
 		zoom:16,
@@ -481,6 +480,52 @@ function afterSearch(err,data)
 	}, 1000);	
 }
 
+//####################Define some extra functions####################
+jQuery.fn.sortElements = (function(){
+ 
+    var sort = [].sort;
+ 
+    return function(comparator, getSortable) {
+ 
+        getSortable = getSortable || function(){return this;};
+ 
+        var placements = this.map(function(){
+ 
+            var sortElement = getSortable.call(this),
+                parentNode = sortElement.parentNode,
+ 
+                // Since the element itself will change position, we have
+                // to have some way of storing its original position in
+                // the DOM. The easiest way is to have a 'flag' node:
+                nextSibling = parentNode.insertBefore(
+                    document.createTextNode(''),
+                    sortElement.nextSibling
+                );
+ 
+            return function() {
+ 
+                if (parentNode === this) {
+                    throw new Error(
+                        "You can’t sort elements if any one is a descendant of another."
+                    );
+                }
+ 
+                // Insert before flag:
+                parentNode.insertBefore(this, nextSibling);
+                // Remove flag:
+                parentNode.removeChild(nextSibling);
+ 
+            };
+ 
+        });
+ 
+        return sort.call(this, comparator).each(function(i){
+            placements[i].call(getSortable.call(this));
+        });
+ 
+    };
+ 
+})();
 //####################JQuery Mobile Methods##########################
 $( document ).bind( 'mobileinit', function(){
 	$.mobile.loader.prototype.options.text = "loading";
@@ -557,6 +602,70 @@ $('#tubelist_div').live('pageshow', function(event) {
 	{
 		tubelist_ul.html("<b>No station is found</b>");
 	}				
+});
+
+$('#places_div').live('pageinit',function(event){
+    //console.log("places page init......");
+    $("#placelist_ul").listview({
+		autodividers:true,
+		autodividersSelector:function(li){
+			var out = li.find('a').text().substring(0,1);
+			//console.log("out:"+out);
+			return out;
+		}
+	});
+	$.ajax({
+		dataType:"json",
+		url: "/public/ajax/osseme4.php",
+		beforeSend:function(jqXHR, settings){
+			$.mobile.loading( 'show', {
+				text: 'Loading...',
+				textVisible: true,
+				theme: 'd',
+				html: ""
+			});
+
+		},
+		success:function(data)
+		{
+			if(data != null && data.results.bindings.length > 0)
+			{
+				//List the places on the page
+				//<li><a href='#tubemap_div' onclick='$("#address").val("SW1W 0DH");$("#search_form").submit();'>Dyslexia Action</a></li>
+				var places_ul = $("#placelist_ul");
+				$.each(data.results.bindings, function(i,place){
+					var place_li = $("<li/>");
+					place_li.appendTo(places_ul);
+					var place_a=$("<a/>").attr("href","#tubemap_div").text(place.label.value);
+					place_a.bind('click',{address:place.pclabel.value},function(event){
+						$("#address").val(event.data.address);
+						$("#search_form").submit();
+					});
+					place_a.appendTo(place_li);
+				});
+				
+				$('#placelist_ul li').sortElements(function(a, b){
+				    return $(a).find('a').text() > $(b).find('a').text() ? 1 : -1;
+				});
+				
+				$("#placelist_ul").listview('refresh');
+			}
+			else
+			{
+				//Connection failed
+				$("#placelist_ul").html("<b>Connection failed. Cannot find any places</b>");
+			}
+		},
+		complete:function(jqXHR, textStatus)
+		{
+			$.mobile.loading( 'hide', {
+				text: 'Loading...',
+				textVisible: true,
+				theme: 'd',
+				html: ""
+			});
+		}
+	});	
 });
 
 $("#search_form").live('submit',function(e){
