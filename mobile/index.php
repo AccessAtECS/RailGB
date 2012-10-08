@@ -221,9 +221,7 @@
 				<a href="#tubemap_div" data-theme="d" data-rel="back" data-direction="reverse" class="ui-btn-left" data-icon="arrow-l">Back</a>			
 			</div>
 			<div data-role="content">
-				<ul id="tubelist_ul" data-role="listview" data-filter="true" data-filter-placeholder="Filter Places...">
-					<li><a href='#tubemap_div' onclick='$("#address").val("SW1W 0DH");$("#search_form").submit();'>Dyslexia Action</a></li>
-				</ul>
+				<ul id="placelist_ul" data-autodividers="true" data-role="listview" data-filter="true" data-filter-placeholder="Filter Places..."></ul>
 			</div>
 			<div data-role="footer" data-theme="d" data-position="fixed" class="nav-glyphish">
 				<div data-role="navbar" >
