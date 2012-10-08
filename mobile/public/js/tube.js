@@ -91,7 +91,8 @@ function fireUpStations(stations) {
 					fareZone:station.zone.value,
 					title: station.name.value,
 					draggable: false,
-					visible: true
+					visible: true,
+					optimized: false
 			});
 			
 			if(currentMarker != null)
