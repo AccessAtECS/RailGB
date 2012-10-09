@@ -35,6 +35,7 @@
 											<option value="5.0">5 miles radius</option>
 											<option value="10.0">10 miles radius</option>
 							  </select>
+							  <input type="button" value="Use Current Location" data-theme="e" id="current_location_btn"/>
 							  <input type="submit" value="Submit" data-theme="b"/>
 						  </form>			
 					 </div>
