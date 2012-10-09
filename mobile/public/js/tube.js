@@ -593,7 +593,7 @@ $('#filter_div').live('pageinit',function(event){
         }
         else
         {
-	        console.log("change2");
+	        //console.log("change2");
 	        $("#filter-sf").prop("checked",false).checkboxradio('refresh');
         }      
     });	
@@ -601,12 +601,32 @@ $('#filter_div').live('pageinit',function(event){
     $('#filter_div #blind').change(function() {
         if($(this).is(":checked")) {
             $("#filter-hpth").prop("checked",true).checkboxradio('refresh');
-            $("#filter-hppf").prop("checked",true).checkboxradio('refresh');
+            //$("#filter-hppf").prop("checked",true).checkboxradio('refresh');
         }
         else
         {
 	        $("#filter-hpth").prop("checked",false).checkboxradio('refresh');
-            $("#filter-hppf").prop("checked",false).checkboxradio('refresh');
+            //$("#filter-hppf").prop("checked",false).checkboxradio('refresh');
+        }       
+    });
+    
+    $('#filter_div #hearing').change(function() {
+        if($(this).is(":checked")) {
+            $("#filter-hpth").prop("checked",true).checkboxradio('refresh');
+        }
+        else
+        {
+	        $("#filter-hpth").prop("checked",false).checkboxradio('refresh');
+        }       
+    });
+    
+    $('#filter_div #mobility').change(function() {
+        if($(this).is(":checked")) {
+            $("#filter-sf").prop("checked",true).checkboxradio('refresh');
+        }
+        else
+        {
+	        $("#filter-sf").prop("checked",false).checkboxradio('refresh');
         }       
     });
 });
