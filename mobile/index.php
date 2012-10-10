@@ -13,7 +13,7 @@
 	<body>
 		<div data-role="page" id="tubemap_div" data-theme="d" data-title="Tube Map" style="width:100%;height:100%;">
 			<div data-role="header" data-theme="a" data-position="fixed">
-				<h1>Tube Map</h1>
+				<h1>RailGB Tube Map</h1>
 				<a href="#search_div" data-icon="search" data-theme="d" data-direction="reverse" data-rel="popup" data-transition="slidedown" class="ui-btn-left">Search</a>
 				<a href="#tubelist_div" data-icon="grid" data-theme="d" data-direction="reverse" class="ui-btn-right"  id="list_a">List</a>
 			</div>
@@ -274,7 +274,12 @@
 			</div>
 		
 			<div data-role="content">
-				
+				<h2>About RailGB</h2>
+				<p> RailGB as a project came out of the annual WAIS Fest 2012. The aim of the project is to identify accessible public transport systems, primarily the UK rail services and London Underground Network. </p>
+				<p>Special thanks to Hugh Glaser and Ian Millard for providing the triple store in <a href="http://oad.rkbexplorer.com/" target="_blank">RKBExplorer</a>.</p>
+				<p>
+The development team are members of the Web and Internet Science Faculty at the University of Southampton, with considerable experience in the field of digital technologies in relation to personalisation, disability, assistive technology, e-learning, mobile and Semantic Web services.</p>
+			<p> &copy; 2012 ECS, University of Southampton</p>
 			</div>
 		
 			<div data-role="footer" data-theme="d" data-position="fixed" class="nav-glyphish">

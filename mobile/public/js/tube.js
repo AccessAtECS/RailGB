@@ -187,7 +187,7 @@ function showStationsCount()
 //callback: the callback function if necessary
 function displayStations(address, callback)
 {				
-	console.log("displayStations");
+	//console.log("displayStations");
 	radius = parseFloat($("#radius").val())*1600;
 	//console.log("radius:"+radius);
 	//console.log("address:"+address);
@@ -552,7 +552,7 @@ $( document ).bind( 'mobileinit', function(){
 
 $('#tubemap_div').live('pageinit',function(event){
 	
-	console.log("tubemap init");
+	//console.log("tubemap init");
 	
 	$("#current_location_btn").click(function(){
 		
@@ -578,7 +578,7 @@ $('#tubemap_div').live('pageinit',function(event){
 });
 					
 $('#tubemap_div').live('pageshow', function(event) {
-	console.log("tubemap show");
+	//console.log("tubemap show");
 	if($("#address").val() != "")
 	{
 		displayStations($("#address").val(), afterSearch);
@@ -587,7 +587,7 @@ $('#tubemap_div').live('pageshow', function(event) {
 
 $('#filter_div').live('pageinit',function(event){
 	$('#filter_div #wheelchair').change(function() {
-		console.log("change");
+		//console.log("change");
         if($(this).is(":checked")) {
             $("#filter-sf").prop("checked",true).checkboxradio('refresh');
         }
