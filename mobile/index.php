@@ -35,6 +35,7 @@
 											<option value="5.0">5 miles radius</option>
 											<option value="10.0">10 miles radius</option>
 							  </select>
+							  <input type="button" value="Use Current Location" data-theme="e" id="current_location_btn"/>
 							  <input type="submit" value="Submit" data-theme="b"/>
 						  </form>			
 					 </div>
@@ -76,8 +77,13 @@
 					   <label for="wheelchair">Wheelchair user</label>
 					   
 					   <input type="checkbox" name="blind" id="blind" class="custom" />
-					   <label for="blind">Visual impair (blind)</label>
+					   <label for="blind">Blind or Partially sighted</label>
+					   
+					   <input type="checkbox" name="hearing" id="hearing" class="custom" />
+					   <label for="hearing">Hearing Loss</label>
 
+					   <input type="checkbox" name="mobility" id="mobility" class="custom" />
+					   <label for="mobility">Mobility Difficulties</label>
 				    </fieldset>
 				</div>
 				<div data-role="fieldcontain">

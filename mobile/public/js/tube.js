@@ -479,6 +479,21 @@ function afterSearch(err,data)
 	}, 1000);	
 }
 
+function handleNoGeolocation()
+{
+	$("#search_info_p").html("Error: The geo-location service failed.");
+	
+	//TODO: let it position to tubelist_div, it doens't work
+	window.setTimeout(function(){
+		$("#search_info_div").popup("open",{
+			positionTo:"#tubelist_div",
+			transition:'fade'
+		});
+		window.setTimeout(function(){
+			$("#search_info_div").popup("close");
+		}, 2000)
+	}, 1000);
+}
 //####################Define some extra functions####################
 jQuery.fn.sortElements = (function(){
  
@@ -538,6 +553,26 @@ $( document ).bind( 'mobileinit', function(){
 $('#tubemap_div').live('pageinit',function(event){
 	
 	console.log("tubemap init");
+	
+	$("#current_location_btn").click(function(){
+		
+      var map;
+      // Try HTML5 geolocation
+      if(navigator.geolocation) 
+      {
+          navigator.geolocation.getCurrentPosition(function(position) {
+          	$("#address").val(position.coords.latitude+","+position.coords.longitude);
+          }, 
+          function() {
+           	handleNoGeolocation(); 
+          });
+        } 
+        else 
+        {
+          // Browser doesn't support Geolocation
+          handleNoGeolocation();
+        }
+    });
 	//TODO: Customise the navigation controls
 	google.maps.event.addDomListener(window, 'load', initialize);
 });
@@ -558,7 +593,7 @@ $('#filter_div').live('pageinit',function(event){
         }
         else
         {
-	        console.log("change2");
+	        //console.log("change2");
 	        $("#filter-sf").prop("checked",false).checkboxradio('refresh');
         }      
     });	
@@ -566,12 +601,32 @@ $('#filter_div').live('pageinit',function(event){
     $('#filter_div #blind').change(function() {
         if($(this).is(":checked")) {
             $("#filter-hpth").prop("checked",true).checkboxradio('refresh');
-            $("#filter-hppf").prop("checked",true).checkboxradio('refresh');
+            //$("#filter-hppf").prop("checked",true).checkboxradio('refresh');
         }
         else
         {
 	        $("#filter-hpth").prop("checked",false).checkboxradio('refresh');
-            $("#filter-hppf").prop("checked",false).checkboxradio('refresh');
+            //$("#filter-hppf").prop("checked",false).checkboxradio('refresh');
+        }       
+    });
+    
+    $('#filter_div #hearing').change(function() {
+        if($(this).is(":checked")) {
+            $("#filter-hpth").prop("checked",true).checkboxradio('refresh');
+        }
+        else
+        {
+	        $("#filter-hpth").prop("checked",false).checkboxradio('refresh');
+        }       
+    });
+    
+    $('#filter_div #mobility').change(function() {
+        if($(this).is(":checked")) {
+            $("#filter-sf").prop("checked",true).checkboxradio('refresh');
+        }
+        else
+        {
+	        $("#filter-sf").prop("checked",false).checkboxradio('refresh');
         }       
     });
 });
