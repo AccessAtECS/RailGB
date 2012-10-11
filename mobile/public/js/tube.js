@@ -145,15 +145,12 @@ function fireUpStations(stations) {
 
 function initialize() {
 	
-	// Image for each pin
-	//var image = '/public/img/theme/wheelchair-not-ok.png';
-	
 	// Fire up map
 	var mapDiv = document.getElementById('map-canvas');
 	map = new google.maps.Map(mapDiv, {
 		center: initialLatLong,
 		zoom:16,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
 	});
 	
 	displayStations("Lodon Bridge",function(err,data){
@@ -180,7 +177,10 @@ function showStationsCount()
 function displayStations(address, callback)
 {				
 	radius = parseFloat($("#radius").val())*1600;
-
+	
+	// Image for each pin
+	var image = new google.maps.MarkerImage("/public/img/poi-blue.png", null, null, null, new google.maps.Size(82,49));
+	
 	stationsDisplayed = new Array();
 	if(address !== undefined && $.trim(address).length >0)
 	{	
@@ -203,7 +203,9 @@ function displayStations(address, callback)
 				currentMarker = new google.maps.Marker({
 						map: map,
 						position: latlng,
-						draggable: false
+						draggable: false,
+						icon: image,
+						optimized: false
 					});
 					
 				circle = new google.maps.Circle({
@@ -212,8 +214,8 @@ function displayStations(address, callback)
 					strokeOpacity: 0.8,
 					strokeWeight: 2,
 					fillColor: "#FF0000",
-						fillOpacity: 0.35,
-						map: map
+					fillOpacity: 0.35,
+					map: map,
 				});
 				
 				circle.bindTo('center', currentMarker, 'position');
