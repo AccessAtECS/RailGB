@@ -212,7 +212,7 @@
 						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true" data-icon="custom">Map</a></li>
 						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true" data-icon="custom">Filter</a></li>
 						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true" data-icon="custom">Places</a></li>
-						<li><a class="ui-btn-active ui-state-persist" href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true" data-icon="custom">Help</a></li>
+						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true" data-icon="custom">Help</a></li>
 						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true" data-icon="custom">About</a></li>
 					</ul>
 				</div>
