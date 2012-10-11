@@ -56,29 +56,21 @@ function getDistance(station)
 		Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
 		Math.sin(dLon/2) * Math.sin(dLon/2); 
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-	//console.log("here3");
-	//console.log(station.getPosition().toString()+"###"+currentMarker.getPosition().toString());
-	//console.log("distance:"+distance);
-	//console.log("radius:"+radius);
+
 	distance = R * c *1000; // Distance in Meters
 	return distance;
 
 }
 			
 function fireUpStations(stations) {
-	//console.log("new markers");
 	clearOverylays();
 	stationsDisplayed = new Array();
 	var count = 0;
-	//console.log(stations.results.bindings.length);
+	
 	$.each(stations.results.bindings, function(i, station) {
-						
-			//console.log("hasLift",station.hasLift.value);
-			
-			//Yunjia: change the image later
+
 			var image = new google.maps.MarkerImage("/public/img/station.png", null, null, null, new google.maps.Size(82,49));
-			
-			//Yunjia Li: This is deliberate! There is something wrong with the dataset
+
 			var lng = parseFloat(station.lat.value);
 			var lat = parseFloat(station.lng.value);
 			var marker;
@@ -153,15 +145,12 @@ function fireUpStations(stations) {
 
 function initialize() {
 	
-	// Image for each pin
-	//var image = '/public/img/theme/wheelchair-not-ok.png';
-	
 	// Fire up map
 	var mapDiv = document.getElementById('map-canvas');
 	map = new google.maps.Map(mapDiv, {
 		center: initialLatLong,
 		zoom:16,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
 	});
 	
 	displayStations("Lodon Bridge",function(err,data){
@@ -187,10 +176,11 @@ function showStationsCount()
 //callback: the callback function if necessary
 function displayStations(address, callback)
 {				
-	console.log("displayStations");
 	radius = parseFloat($("#radius").val())*1600;
-	//console.log("radius:"+radius);
-	//console.log("address:"+address);
+	
+	// Image for each pin
+	var image = new google.maps.MarkerImage("/public/img/poi-blue.png", null, null, null, new google.maps.Size(82,49));
+	
 	stationsDisplayed = new Array();
 	if(address !== undefined && $.trim(address).length >0)
 	{	
@@ -202,10 +192,8 @@ function displayStations(address, callback)
 				var lat = data[0].geometry.location.Xa;
 				var lng = data[0].geometry.location.Ya;
 				var latlng = new google.maps.LatLng(lat,lng,true);
-				//console.log(latlng.toString());
 				//draw a circle
 				if (circle != null) {
-					//console.log("setvisible");
 				    circle.setVisible(false);
 					circle.setMap(null);
 				}
@@ -215,7 +203,9 @@ function displayStations(address, callback)
 				currentMarker = new google.maps.Marker({
 						map: map,
 						position: latlng,
-						draggable: false
+						draggable: false,
+						icon: image,
+						optimized: false
 					});
 					
 				circle = new google.maps.Circle({
@@ -224,22 +214,18 @@ function displayStations(address, callback)
 					strokeOpacity: 0.8,
 					strokeWeight: 2,
 					fillColor: "#FF0000",
-						fillOpacity: 0.35,
-						map: map
+					fillOpacity: 0.35,
+					map: map,
 				});
 				
 				circle.bindTo('center', currentMarker, 'position');
 				
 				map.setCenter(currentMarker.getPosition());
-				//map.fitBounds( circle.getBounds() );
 				
 				var selected = new Array()
 				$("#filter_div :checkbox:checked").each(function(){
 					selected.push($(this).val());
 				});
-				//console.log("select:"+selected);
-				//console.log("filterArray:"+filterArray);
-				//console.log("session:"+cachedData.results);
 				if(($(selected).not(filterArray).length == 0 && $(filterArray).not(selected).length == 0) && cachedData != null)
 				{
 					//use old data
@@ -418,8 +404,6 @@ function getPropertyInfo(item)
 	var o = "";
 	if(p.indexOf("label") != -1)
 	{
-		//name = "StationName";
-		//o = item.o.value;
 		$("#station_h2").text(item.o.value);
 		$("#station_h4").text(item.o.value);
 		$("#station_thumbnail").attr("alt",item.o.value+" thumbnail");
@@ -457,7 +441,6 @@ function afterSearch(err,data)
 	if(stationsDisplayed.length >0)
 	{
 		resultStr = "<p><b>"+stationsDisplayed.length+"</b> stations found. </p>";
-		//$("#list_a").text("List("+stationsDisplayed.length+")");
 		$("#list_a").show();
 	}
 	else
@@ -552,7 +535,7 @@ $( document ).bind( 'mobileinit', function(){
 
 $('#tubemap_div').live('pageinit',function(event){
 	
-	console.log("tubemap init");
+	//console.log("tubemap init");
 	
 	$("#current_location_btn").click(function(){
 		
@@ -578,7 +561,7 @@ $('#tubemap_div').live('pageinit',function(event){
 });
 					
 $('#tubemap_div').live('pageshow', function(event) {
-	console.log("tubemap show");
+	//console.log("tubemap show");
 	if($("#address").val() != "")
 	{
 		displayStations($("#address").val(), afterSearch);
@@ -587,7 +570,7 @@ $('#tubemap_div').live('pageshow', function(event) {
 
 $('#filter_div').live('pageinit',function(event){
 	$('#filter_div #wheelchair').change(function() {
-		console.log("change");
+		//console.log("change");
         if($(this).is(":checked")) {
             $("#filter-sf").prop("checked",true).checkboxradio('refresh');
         }
