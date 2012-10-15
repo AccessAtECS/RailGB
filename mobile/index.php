@@ -251,6 +251,38 @@
 			</div>
 			<div data-role="content">
 				<h2>Help</h2>
+				<ul id="ul_help_list">
+					<li><a href="#help_map" data-ajax="false">Map and Search</a></li>
+					<li><a href="#help_detail" data-ajax="false">View Station Detail</a></li>
+					<li><a href="#help_filter" data-ajax="false">Filter</a></li>
+					<li><a href="#help_places" data-ajax="false">Quick Places</a></li>
+				</ul>
+				<div>
+					<div id="help_map">
+						<h3>Tube Map</h3>
+						<p>The default location when you open the page is "London Bridge". On this page, you can click the "Search" button on top left corner and search the underground stations around a certain place. In the search box, you can fill the place's name, postcode or use your current location. You can also change the search radius.</p>
+						<p><a href="#ul_help_list" data-ajax="false">Back to Top</a></p>
+						<p>After search, if there are any stations which meet the search requirements, the stations will be marked on the map. You can click on the marker to see the station's name. Or, you can click the "List" button on top right corner to see a list of found stations.</p>
+						<p><a href="#ul_help_list" data-ajax="false">Back to Top</a></p>
+					</div>
+					<div id="help_detail">
+						<h3>View Station Detail</h3>
+						<p>You can view the detail of a station by clicking the "Detail" button in the information box of a station on the map. Or in the stations list page, click on the station in the list.</p>
+						<p><a href="#ul_help_list" data-ajax="false">Back to Top</a></p>
+						<p>On the station detail page, you can check the name, address and phone of the station. RailGB also indicates if it is a "step-free" station. You can also check the "Facilities Available" and "Facilities Not Available". The "More Info" tab provides more information about this station.</p>
+						<p><a href="#ul_help_list" data-ajax="false">Back to Top</a></p>
+					</div>
+					<div id="help_filter">
+						<h3>Filter</h3>
+						<p>On the filter page, you can either choose the disability, or check the facilities that you requirement in the search. If you choose the disability, we will automatically set the facility preferences for this disability. These facilities include lifts, escalators, toilets, car parks, cash machines, vending machines, etc. After selecting the preferences, you can go back to Tube Map page and search for the stations which meet your preferences. </p>
+						<p><a href="#ul_help_list" data-ajax="false">Back to Top</a></p>
+					</div>
+					<div id="help_places">
+						<h3>Quick Places</h3>
+						<p>RailGB provides a list of quick places on the Places page. You can filter the places by characters and select a place, where you want to search the nearby stations.</p>
+						<p><a href="#ul_help_list" data-ajax="false">Back to Top</a></p>
+					</div>
+				</div>
 			</div>
 			<div data-role="footer" data-theme="d" data-position="fixed" class="nav-glyphish">
 				<div data-role="navbar" >
@@ -275,7 +307,7 @@
 		
 			<div data-role="content">
 				<h2>About RailGB</h2>
-				<p> RailGB as a project came out of the annual WAIS Fest 2012. The aim of the project is to identify accessible public transport systems, primarily the UK rail services and London Underground Network. </p>
+				<p> RailGB as a project came out of the annual WAIS Fest 2012. The aim of the project is to identify accessible public transport systems, primarily the London Underground Network, as well as UK railway networks. </p>
 				<p>Special thanks to Hugh Glaser and Ian Millard for providing the triple store in <a href="http://oad.rkbexplorer.com/" target="_blank">RKBExplorer</a>.</p>
 				<p>
 The development team are members of the Web and Internet Science Faculty at the University of Southampton, with considerable experience in the field of digital technologies in relation to personalisation, disability, assistive technology, e-learning, mobile and Semantic Web services.</p>

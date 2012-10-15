@@ -1,6 +1,7 @@
 console.log("load tube.js");
 
 var map = null;
+var maploading = false; //a flag in case two programmes call initialize() together
 var circle = null;
 var currentMarker = null; //the center of current marker
 var cachedData = null;
@@ -146,16 +147,22 @@ function fireUpStations(stations) {
 function initialize() {
 	
 	// Fire up map
+	//console.log("initialize");
 	var mapDiv = document.getElementById('map-canvas');
-	map = new google.maps.Map(mapDiv, {
-		center: initialLatLong,
-		zoom:16,
-		mapTypeId: google.maps.MapTypeId.ROADMAP,
-	});
+	if(maploading == false)
+	{
+		maploading = true;
+		map = new google.maps.Map(mapDiv, {
+			center: initialLatLong,
+			zoom:16,
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+		});
+		
+		displayStations("Lodon Bridge",function(err,data){
+			maploading = false;
+		});
+	}
 	
-	displayStations("Lodon Bridge",function(err,data){
-		//Do nothing
-	});
 }
 
 function showStationsCount()
@@ -536,10 +543,8 @@ $( document ).bind( 'mobileinit', function(){
 $('#tubemap_div').live('pageinit',function(event){
 	
 	//console.log("tubemap init");
-	
 	$("#current_location_btn").click(function(){
 		
-      var map;
       // Try HTML5 geolocation
       if(navigator.geolocation) 
       {
@@ -556,12 +561,16 @@ $('#tubemap_div').live('pageinit',function(event){
           handleNoGeolocation();
         }
     });
-	//TODO: Customise the navigation controls
 	google.maps.event.addDomListener(window, 'load', initialize);
+	//initialize();
 });
 					
 $('#tubemap_div').live('pageshow', function(event) {
 	//console.log("tubemap show");
+	if(map == null)
+	{
+		initialize();
+	}	
 	if($("#address").val() != "")
 	{
 		displayStations($("#address").val(), afterSearch);
