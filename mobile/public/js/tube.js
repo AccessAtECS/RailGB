@@ -158,7 +158,7 @@ function initialize() {
 			mapTypeId: google.maps.MapTypeId.ROADMAP,
 		});
 		
-		displayStations("Lodon Bridge",function(err,data){
+		displayStations("Lodon Bridge","",function(err,data){
 			maploading = false;
 		});
 	}
@@ -181,7 +181,7 @@ function showStationsCount()
 }
 
 //callback: the callback function if necessary
-function displayStations(address, callback)
+function displayStations(address, addName, callback)
 {				
 	radius = parseFloat($("#radius").val())*1600;
 	
@@ -214,7 +214,18 @@ function displayStations(address, callback)
 						icon: image,
 						optimized: false
 					});
+				if(addName !="")
+				{
+					var infowindow = new google.maps.InfoWindow({
+						content: addName
+					});
 					
+					google.maps.event.addListener(currentMarker, 'click', function() {
+						infowindow.open(map, currentMarker);
+					});
+					
+					infowindow.open(map,currentMarker);
+				}
 				circle = new google.maps.Circle({
 					radius:radius,
 					strokeColor: "#FF0000",
@@ -569,12 +580,15 @@ $('#tubemap_div').live('pageshow', function(event) {
 	//console.log("tubemap show");
 	if(map == null)
 	{
+		console.log("map null");
 		initialize();
+		
+		if($("#address").val() != "")
+		{
+			displayStations($("#address").val(),$("#addName").val(), afterSearch);
+		}	
 	}	
-	if($("#address").val() != "")
-	{
-		displayStations($("#address").val(), afterSearch);
-	}			
+			
 });
 
 $('#filter_div').live('pageinit',function(event){
@@ -723,7 +737,8 @@ $("#search_form").live('submit',function(e){
 
     //run an AJAX post request to your server-side script, $this.serialize() is the data from your form being added to the request
     var address = $("#address").val();
-	displayStations(address,afterSearch);	
+    var addName = $("#addName").val();
+	displayStations(address,addName,afterSearch);	
 });
 
 $('#detail_div').live('pageshow',function(event){
@@ -836,5 +851,54 @@ $('#detail_div').live('pageshow',function(event){
 			}
 		});
 	}
+});
+
+$('#event_div').live('pageinit',function(event){
+	
+	$.ajax({
+		dataType:"json",
+		url: "/public/ajax/eventmedia.php",
+		beforeSend:function(jqXHR, settings){
+			$.mobile.loading( 'show', {
+				text: 'Loading...',
+				textVisible: true,
+				theme: 'd',
+				html: ""
+			});
+		},
+		success:function(data)
+		{
+			if(data != null && data.results.bindings.length > 0)
+			{
+				var event_ul = $("#eventlist_ul");
+				$.each(data.results.bindings, function(i,ev){
+					var event_li = $("<li/>");
+					event_li.appendTo(event_ul);
+					var event_a=$("<a/>").attr("href","#tubemap_div").text(ev.title.value);
+					event_a.bind('click',{lat:ev.lat.value,lng:ev.lng.value,placeName:ev.placeName.value, title:ev.title.value},function(event){
+						$("#address").val(event.data.lat+","+event.data.lng);
+						$("#addName").val("Event "+event.data.title+" at: "+event.data.placeName);
+						$("#search_form").submit();
+					});
+					event_a.appendTo(event_li);
+				});
+				$("#eventlist_ul").listview('refresh');
+			}
+			else
+			{
+				//Connection failed
+				$("#eventlist_ul").html("<b>Connection failed. Cannot find any events</b>");
+			}
+		},
+		complete:function(jqXHR, textStatus)
+		{
+			$.mobile.loading( 'hide', {
+					text: 'Loading...',
+					textVisible: true,
+					theme: 'd',
+					html: ""
+				});
+		}
+	});	
 });
 
