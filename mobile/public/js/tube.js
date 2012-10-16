@@ -1,4 +1,4 @@
-console.log("load tube.js");
+//console.log("load tube.js");
 
 var map = null;
 var maploading = false; //a flag in case two programmes call initialize() together
@@ -136,7 +136,7 @@ function fireUpStations(stations) {
 			count++;
 		});
 		
-		console.log("marker size:"+markers.length);
+		//console.log("marker size:"+markers.length);
 		//sort the stations by distance
 		if(stationsDisplayed.length >0)
 		{
@@ -580,7 +580,7 @@ $('#tubemap_div').live('pageshow', function(event) {
 	//console.log("tubemap show");
 	if(map == null)
 	{
-		console.log("map null");
+		//console.log("map null");
 		initialize();
 		
 		if($("#address").val() != "")
@@ -784,7 +784,7 @@ $('#detail_div').live('pageshow',function(event){
 						else if(item.p.value.indexOf("sameAs") != -1)//sameAS
 						{
 							var dbpediaURI = item.o.value;
-							console.log(dbpediaURI);
+							//console.log(dbpediaURI);
 							//query dbpedia to get the thumbnail picture
 							$.ajax({
 								dataType:"json",
