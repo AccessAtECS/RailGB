@@ -54,8 +54,8 @@
 						<li><a class="ui-btn-active ui-state-persist" href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true" data-icon="custom">Map</a></li>
 						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true" data-icon="custom">Filter</a></li>
 						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true" data-icon="custom">Places</a></li>
+						<li><a href="#event_div" data-role="button" data-theme="d" id="event_btn" data-mini="true" data-icon="custom">Events</a></li>
 						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true" data-icon="custom">Help</a></li>
-						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true" data-icon="custom">About</a></li>
 					</ul>
 				</div>
 			</div>	
@@ -125,8 +125,8 @@
 						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true" data-icon="custom">Map</a></li>
 						<li><a class="ui-btn-active ui-state-persist" href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true" data-icon="custom">Filter</a></li>
 						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true" data-icon="custom">Places</a></li>
+						<li><a href="#event_div" data-role="button" data-theme="d" id="event_btn" data-mini="true" data-icon="custom">Events</a></li>
 						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true" data-icon="custom">Help</a></li>
-						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true" data-icon="custom">About</a></li>
 					</ul>
 				</div>
 			</div>	
@@ -149,8 +149,8 @@
 						<li><a class="ui-btn-active ui-state-persist" href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true" data-icon="custom">Map</a></li>
 						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true" data-icon="custom">Filter</a></li>
 						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true" data-icon="custom">Places</a></li>
+						<li><a href="#event_div" data-role="button" data-theme="d" id="event_btn" data-mini="true" data-icon="custom">Events</a></li>
 						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true" data-icon="custom">Help</a></li>
-						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true" data-icon="custom">About</a></li>
 					</ul>
 				</div>
 			</div>	
@@ -213,8 +213,8 @@
 						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true" data-icon="custom">Map</a></li>
 						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true" data-icon="custom">Filter</a></li>
 						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true" data-icon="custom">Places</a></li>
+						<li><a href="#event_div" data-role="button" data-theme="d" id="event_btn" data-mini="true" data-icon="custom">Events</a></li>
 						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true" data-icon="custom">Help</a></li>
-						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true" data-icon="custom">About</a></li>
 					</ul>
 				</div>
 			</div>	
@@ -236,13 +236,36 @@
 						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true" data-icon="custom">Map</a></li>
 						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true" data-icon="custom">Filter</a></li>
 						<li><a class="ui-btn-active ui-state-persist" href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true" data-icon="custom">Places</a></li>
+						<li><a href="#event_div" data-role="button" data-theme="d" id="event_btn" data-mini="true" data-icon="custom">Events</a></li>
 						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true" data-icon="custom">Help</a></li>
-						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true" data-icon="custom">About</a></li>
 					</ul>
 				</div>
 			</div>	
 		</div>
 		<!-- /Places page -->
+		
+		<!-- Event page -->
+		<div data-role="page" id="event_div" data-title="Event">
+			<div data-role="header" data-theme="a">
+				<h1>Recent Events</h1>
+				<a href="#tubemap_div" data-theme="d" data-rel="back" data-direction="reverse" class="ui-btn-left" data-icon="arrow-l">Back</a>			
+			</div>
+			<div data-role="content">
+				<ul id="eventlist_ul" data-role="listview" data-filter="true" data-filter-placeholder="Filter Events..."></ul>
+			</div>
+			<div data-role="footer" data-theme="d" data-position="fixed" class="nav-glyphish">
+				<div data-role="navbar" >
+					<ul>
+						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true" data-icon="custom">Map</a></li>
+						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true" data-icon="custom">Filter</a></li>
+						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true" data-icon="custom">Places</a></li>
+						<li><a class="ui-btn-active ui-state-persist" href="#event_div" data-role="button" data-theme="d" id="event_btn" data-mini="true" data-icon="custom">Events</a></li>
+						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true" data-icon="custom">Help</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- /Event page-->
 		
 		<!-- Help page -->
 		<div data-role="page" id="help_div" data-title="Help">
@@ -257,6 +280,7 @@
 					<li><a href="#help_detail" data-ajax="false">View Station Detail</a></li>
 					<li><a href="#help_filter" data-ajax="false">Filter</a></li>
 					<li><a href="#help_places" data-ajax="false">Quick Places</a></li>
+					<li><a href="#help_about" data-ajax="false">About RailGB</a></li>
 				</ul>
 				<div>
 					<div id="help_map">
@@ -283,6 +307,15 @@
 						<p>RailGB provides a list of quick places on the Places page. You can filter the places by characters and select a place, where you want to search the nearby stations.</p>
 						<p><a href="#ul_help_list" data-ajax="false">Back to Top</a></p>
 					</div>
+					<div id="help_about">
+						<h3>About RailGB</h3>
+						<p> RailGB as a project came out of the annual WAIS Fest 2012. The aim of the project is to identify accessible public transport systems, primarily the London Underground Network, as well as UK railway networks. </p>
+						<p>Special thanks to Hugh Glaser and Ian Millard for providing the triple store in <a href="http://oad.rkbexplorer.com/" target="_blank">RKBExplorer</a>.</p>
+						<p>
+		The development team are members of the Web and Internet Science Faculty at the University of Southampton, with considerable experience in the field of digital technologies in relation to personalisation, disability, assistive technology, e-learning, mobile and Semantic Web services.</p>
+						<p><a href="#ul_help_list" data-ajax="false">Back to Top</a></p>
+					</div>
+					<p> &copy; 2012 ECS, University of Southampton</p>
 				</div>
 			</div>
 			<div data-role="footer" data-theme="d" data-position="fixed" class="nav-glyphish">
@@ -291,43 +324,12 @@
 						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true" data-icon="custom">Map</a></li>
 						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true" data-icon="custom">Filter</a></li>
 						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true" data-icon="custom">Places</a></li>
+						<li><a href="#event_div" data-role="button" data-theme="d" id="event_btn" data-mini="true" data-icon="custom">Events</a></li>
 						<li><a class="ui-btn-active ui-state-persist" href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true" data-icon="custom">Help</a></li>
-						<li><a href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true" data-icon="custom">About</a></li>
 					</ul>
 				</div>
 			</div>	
 		</div>
 		<!-- /Help page -->
-		
-		<!-- About page : about this application-->
-		<div data-role="page" id="about_div" data-title="About">
-			<div data-role="header" data-theme="a">
-				<h1>About</h1>
-				<a href="#tubemap_div" data-theme="d" data-rel="back" data-direction="reverse" class="ui-btn-left"  data-icon="arrow-l">Back</a>
-			</div>
-		
-			<div data-role="content">
-				<h2>About RailGB</h2>
-				<p> RailGB as a project came out of the annual WAIS Fest 2012. The aim of the project is to identify accessible public transport systems, primarily the London Underground Network, as well as UK railway networks. </p>
-				<p>Special thanks to Hugh Glaser and Ian Millard for providing the triple store in <a href="http://oad.rkbexplorer.com/" target="_blank">RKBExplorer</a>.</p>
-				<p>
-The development team are members of the Web and Internet Science Faculty at the University of Southampton, with considerable experience in the field of digital technologies in relation to personalisation, disability, assistive technology, e-learning, mobile and Semantic Web services.</p>
-			<p> &copy; 2012 ECS, University of Southampton</p>
-			</div>
-		
-			<div data-role="footer" data-theme="d" data-position="fixed" class="nav-glyphish">
-				<div data-role="navbar" >
-					<ul>
-						<li><a href="#tubemap_div" data-role="button" data-theme="d" id="tubemap_btn" data-mini="true" data-icon="custom">Map</a></li>
-						<li><a href="#filter_div" data-role="button" data-theme="d" id="filter_btn" data-mini="true" data-icon="custom">Filter</a></li>
-						<li><a href="#places_div" data-role="button" data-theme="d" id="places_btn" data-mini="true" data-icon="custom">Places</a></li>
-						<li><a href="#help_div" data-role="button" data-theme="d" id="help_btn" data-mini="true" data-icon="custom">Help</a></li>
-						<li><a class="ui-btn-active ui-state-persist" href="#about_div" data-role="button" data-theme="d" id="about_btn" data-mini="true" data-icon="custom">About</a></li>
-					</ul>
-				</div>
-			</div>	
-		
-		</div>
-		<!-- /About page -->
 	</body>
 </html>
