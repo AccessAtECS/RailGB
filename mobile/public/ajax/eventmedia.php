@@ -41,8 +41,7 @@ $query = "select distinct ?_about ?title ?description ?placeName ?lat ?lng ?date
             ?node  time:inXSDDateTime ?datetime
           }
         }
-      }
-      order by desc(?datetime)";
+      }";
 
 $contents = file_get_contents("http://eventmedia.eurecom.fr/sparql?format=json&query=".urlencode(str_replace("\n", " ", $query)));
 $contents = json_decode($contents);
