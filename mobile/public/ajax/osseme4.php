@@ -8,10 +8,6 @@ if(!function_exists('curl_init'))
 $folder = "cache";
 $filename = "cache/osseme4.json";
 
-// Make sure we can read/write the files
-chmod($folder, 0777);
-chmod($filename, 0777);
-
 // Check if the file is older than a day
 if(time() - filemtime($filename) > 86400) unlink($filename);
 
@@ -54,6 +50,3 @@ else{
 
 	echo json_encode($contents);
 }
-
-chmod($folder, 0775);
-chmod($filename, 0775);
