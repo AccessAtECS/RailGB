@@ -1,7 +1,7 @@
 //console.log("load tube.js");
 
 var map = null;
-var maploading = false; //a flag in case two programmes call initialize() together
+var newSearch = false;
 var circle = null;
 var currentMarker = null; //the center of current marker
 var cachedData = null;
@@ -9,11 +9,11 @@ var markers = new Array(); //all the markers of tube stations
 var stationsDisplayed = new Array();
 var filterArray = new Array(); //The array to remember the filter selections
 var radius = 1600.0; //1 miles
+var initialLatLong = new google.maps.LatLng(51.5077475, -0.08776190000003226);
 
 var currentStationURI = null;
 
 var rs = null;
-var initialLatLong = new google.maps.LatLng(51.5077475, -0.08776190000003226);
 
 if (typeof(Number.prototype.toRad) === "undefined") {
 		Number.prototype.toRad = function() {
@@ -62,7 +62,31 @@ function getDistance(station)
 	return distance;
 
 }
-			
+
+function initialize() {
+	console.log("initialize");
+	var mapDiv = document.getElementById('map-canvas');
+	map = new google.maps.Map(mapDiv, {
+		center: initialLatLong,
+		zoom:14,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		mapTypeControl: true,
+	    mapTypeControlOptions: {
+	      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+	    },
+	    navigationControl: true,
+	    navigationControlOptions: {
+	      style: google.maps.NavigationControlStyle.SMALL
+	    },
+	    zoomControl:true,
+	    zoomControlOptions:{
+		    style: google.maps.ZoomControlStyle.SMALL,
+		    position: google.maps.ControlPosition.TOP_LEFT
+	    },
+	    streetViewControl: false
+	});
+}
+		
 function fireUpStations(stations) {
 	clearOverylays();
 	stationsDisplayed = new Array();
@@ -143,28 +167,6 @@ function fireUpStations(stations) {
 			sortStationsDisplay('distance',true);
 		}
 }
-
-function initialize() {
-	
-	// Fire up map
-	//console.log("initialize");
-	var mapDiv = document.getElementById('map-canvas');
-	if(maploading == false)
-	{
-		maploading = true;
-		map = new google.maps.Map(mapDiv, {
-			center: initialLatLong,
-			zoom:16,
-			mapTypeId: google.maps.MapTypeId.ROADMAP,
-		});
-		
-		displayStations("Lodon Bridge","",function(err,data){
-			maploading = false;
-		});
-	}
-	
-}
-
 function showStationsCount()
 {
 	if(stationsDisplayed.length ==0)
@@ -184,6 +186,10 @@ function showStationsCount()
 function displayStations(address, addName, callback)
 {				
 	radius = parseFloat($("#radius").val())*1600;
+	if(address.match(/-?\d+\.\d+/g) == null && address.toLowerCase().indexOf("london") == -1)
+	{
+		address += ", London";
+	}
 	
 	// Image for each pin
 	var image = new google.maps.MarkerImage("/public/img/poi-blue.png", null, null, null, new google.maps.Size(82,49));
@@ -256,8 +262,10 @@ function displayStations(address, addName, callback)
 						for ( var i = 0; i < stationsDisplayed.length; i++ ) {
 								latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
 						}
-						map.setCenter(currentMarker.getPosition());
+						//map.setCenter(currentMarker.getPosition());
 						map.fitBounds( latlngbounds );
+						//var zoomLevel = getPropertyInfo(radius);
+						//map.setZoom(zoomLevel);
 					}
 					
 					showStationsCount();
@@ -293,8 +301,10 @@ function displayStations(address, addName, callback)
 								for ( var i = 0; i < stationsDisplayed.length; i++ ) {
 										latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
 								}
-								map.setCenter(currentMarker.getPosition());
+								//map.setCenter(currentMarker.getPosition());
 								map.fitBounds( latlngbounds );
+								//var zoomLevel = getPropertyInfo(radius);
+								//map.setZoom(zoomLevel);
 							}
 							
 							showStationsCount();
@@ -417,6 +427,9 @@ function getFaclityAndQuantity(item)
 
 function getPropertyInfo(item)
 {
+	if(item.p == undefined)
+		return;
+	
 	var p = item.p.value;
 	var name = null;
 	var o = "";
@@ -454,17 +467,17 @@ function getPropertyInfo(item)
 
 function afterSearch(err,data)
 {
-	$("#search_div").popup('close');
-	var resultStr;
+	var resultStr = "";
+	var radiusText = $("#search_form option:selected").text();
+	var checkedFacilitiesCount = $(".facilities :checked").length;
+	resultStr += "<p>"+radiusText+", "+checkedFacilitiesCount+" facilities selected.</p>"
 	if(stationsDisplayed.length >0)
 	{
-		resultStr = "<p><b>"+stationsDisplayed.length+"</b> stations found. </p>";
-		$("#list_a").show();
+		resultStr += "<p><strong>"+stationsDisplayed.length+" stations found. </strong.</p>";
 	}
 	else
 	{
-		resultStr = "<p>No station found. </p>";
-		$("#list_a").hide();
+		resultStr += "<p>No station found. </p>";
 	}
 	$("#search_info_p").html(resultStr);
 	
@@ -477,7 +490,9 @@ function afterSearch(err,data)
 		window.setTimeout(function(){
 			$("#search_info_div").popup("close");
 		}, 2000)
-	}, 1000);	
+	}, 1000);
+	
+	newSearch = false;
 }
 
 function handleNoGeolocation()
@@ -542,18 +557,7 @@ jQuery.fn.sortElements = (function(){
  
 })();
 //####################JQuery Mobile Methods##########################
-$( document ).bind( 'mobileinit', function(){
-	$.mobile.loader.prototype.options.text = "loading";
-	$.mobile.loader.prototype.options.textVisible = false;
-	$.mobile.loader.prototype.options.theme = "d";
-	$.mobile.loader.prototype.options.html = "";
-	
-	$.mobile.page.prototype.options.backBtnTheme    = "d";
-});
-
-$('#tubemap_div').live('pageinit',function(event){
-	
-	//console.log("tubemap init");
+$('#search_div').live('pageinit',function(event){
 	$("#current_location_btn").click(function(){
 		
       // Try HTML5 geolocation
@@ -572,23 +576,74 @@ $('#tubemap_div').live('pageinit',function(event){
           handleNoGeolocation();
         }
     });
-	google.maps.event.addDomListener(window, 'load', initialize);
-	//initialize();
+    
+    $("#search_a").click(function(){
+	    newSearch = true;
+    })
 });
+
+$('#search_div').live('pageshow',function(event){
+	var checkedFacilities = $(".facilities :checked");
+	var search_filter_div =$("#search_filter_div");
+	var search_filter_ul = $("#search_filter_ul");
+
+	if(checkedFacilities.length >0)
+	{
+		search_filter_ul.empty();
+		$.each(checkedFacilities,function(i,facility){
+			var facility_text = $(facility).prop("title");
+			var facility_li = $("<li/>");
+			facility_li.text(facility_text);
+			facility_li.appendTo(search_filter_ul);
+		});
+		search_filter_ul.listview('refresh');
+		search_filter_ul.show();
+		search_filter_div.hide();
+	}
+	else
+	{
+		search_filter_ul.hide();
+		search_filter_div.show();
+	}
+});
+
+$("#search_form").live('submit',function(e){
+	//cache the form element for use in this function
+	console.log("submit");
+    var $this = $(this);
+
+    //prevent the default submission of the form
+    e.preventDefault();
+
+    //run an AJAX post request to your server-side script, $this.serialize() is the data from your form being added to the request
+    var address = $("#address").val();
+    var addName = $("#addName").val();
+    displayStations(address,addName,afterSearch);
+});
+
+//$('#tubemap_div').live('pageinit',function(event){
+	
+	//console.log("tubemap init");
+	//google.maps.event.addDomListener(window, 'load', initialize);
+	//initialize();
+//});
 					
 $('#tubemap_div').live('pageshow', function(event) {
-	//console.log("tubemap show");
 	if(map == null)
 	{
 		//console.log("map null");
 		initialize();
 		
-		if($("#address").val() != "")
-		{
-			displayStations($("#address").val(),$("#addName").val(), afterSearch);
-		}	
-	}	
-			
+		//if($("#address").val() != "")
+		//{
+		//	displayStations($("#address").val(),$("#addName").val(), afterSearch);
+		//}	
+	}
+	
+	if(newSearch == true)
+	{
+		$("#search_form").submit();
+	}
 });
 
 $('#filter_div').live('pageinit',function(event){
@@ -635,6 +690,10 @@ $('#filter_div').live('pageinit',function(event){
 	        $("#filter-sf").prop("checked",false).checkboxradio('refresh');
         }       
     });
+    
+    $('#reset_btn').click(function(){
+		$("#filter_form :checked").prop("checked",false).checkboxradio('refresh');
+	});
 });
 
 $('#tubelist_div').live('pageshow', function(event) {
@@ -642,6 +701,9 @@ $('#tubelist_div').live('pageshow', function(event) {
 	tubelist_ul.empty();
 	if(stationsDisplayed.length >0)
 	{
+		var search_count_li = $("<li/>").attr("data-role","list-divider");
+		search_count_li.html('<span id="search_count_span">'+stationsDisplayed.length+'</span><span> stations have been found.</span>')
+		tubelist_ul.append(search_count_li);
 		$.each(stationsDisplayed, function(i, station) {
 			var distance = station.distance;
 			var station_li = $("<li/>").appendTo(tubelist_ul);
@@ -696,10 +758,10 @@ $('#places_div').live('pageinit',function(event){
 				$.each(data.results.bindings, function(i,place){
 					var place_li = $("<li/>");
 					place_li.appendTo(places_ul);
-					var place_a=$("<a/>").attr("href","#tubemap_div").text(place.label.value);
+					var place_a=$("<a/>").attr("href","#search_div").text(place.label.value);
 					place_a.bind('click',{address:place.pclabel.value},function(event){
-						$("#address").val(event.data.address);
-						$("#search_form").submit();
+						$("#address").val(place.label.value + " "+event.data.address);
+						//$("#search_form").submit();
 					});
 					place_a.appendTo(place_li);
 				});
@@ -726,19 +788,6 @@ $('#places_div').live('pageinit',function(event){
 			});
 		}
 	});	
-});
-
-$("#search_form").live('submit',function(e){
-	//cache the form element for use in this function
-    var $this = $(this);
-
-    //prevent the default submission of the form
-    e.preventDefault();
-
-    //run an AJAX post request to your server-side script, $this.serialize() is the data from your form being added to the request
-    var address = $("#address").val();
-    var addName = $("#addName").val();
-	displayStations(address,addName,afterSearch);	
 });
 
 $('#detail_div').live('pageshow',function(event){
@@ -774,7 +823,7 @@ $('#detail_div').live('pageshow',function(event){
 							//console.log("quantity:"+quantity);
 							if(quantity > 0)
 							{
-								facilityHasStr +="<li>"+name+"<span class='ui-li-count'>"+quantity+"</span></li>";
+								facilityHasStr +="<li>"+quantity+" "+ name+"</li>";
 							}
 							else
 							{
@@ -874,11 +923,11 @@ $('#event_div').live('pageinit',function(event){
 				$.each(data.results.bindings, function(i,ev){
 					var event_li = $("<li/>");
 					event_li.appendTo(event_ul);
-					var event_a=$("<a/>").attr("href","#tubemap_div").text(ev.title.value);
+					var event_a=$("<a/>").attr("href","#search_div").text(ev.title.value);
 					event_a.bind('click',{lat:ev.lat.value,lng:ev.lng.value,placeName:ev.placeName.value, title:ev.title.value},function(event){
-						$("#address").val(event.data.lat+","+event.data.lng);
+						$("#address").val(event.data.placeName+ ", London, UK");//+event.data.lat+","+event.data.lng);
 						$("#addName").val("Event "+event.data.title+" at: "+event.data.placeName);
-						$("#search_form").submit();
+						//$("#search_form").submit();
 					});
 					event_a.appendTo(event_li);
 				});
