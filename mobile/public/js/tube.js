@@ -64,7 +64,7 @@ function getDistance(station)
 }
 
 function initialize() {
-	console.log("initialize");
+	//console.log("initialize");
 	var mapDiv = document.getElementById('map-canvas');
 	map = new google.maps.Map(mapDiv, {
 		center: initialLatLong,
@@ -259,6 +259,7 @@ function displayStations(address, addName, callback)
 					{
 						
 						var latlngbounds = new google.maps.LatLngBounds( );
+						latlngbounds.extend(currentMarker.getPosition());
 						for ( var i = 0; i < stationsDisplayed.length; i++ ) {
 								latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
 						}
@@ -298,6 +299,7 @@ function displayStations(address, addName, callback)
 							{
 								
 								var latlngbounds = new google.maps.LatLngBounds( );
+								latlngbounds.extend(currentMarker.getPosition());
 								for ( var i = 0; i < stationsDisplayed.length; i++ ) {
 										latlngbounds.extend( stationsDisplayed[ i ].getPosition() );
 								}
@@ -609,7 +611,7 @@ $('#search_div').live('pageshow',function(event){
 
 $("#search_form").live('submit',function(e){
 	//cache the form element for use in this function
-	console.log("submit");
+	//console.log("submit");
     var $this = $(this);
 
     //prevent the default submission of the form
@@ -760,7 +762,7 @@ $('#places_div').live('pageinit',function(event){
 					place_li.appendTo(places_ul);
 					var place_a=$("<a/>").attr("href","#search_div").text(place.label.value);
 					place_a.bind('click',{address:place.pclabel.value},function(event){
-						$("#address").val(place.label.value + " "+event.data.address);
+						$("#address").val(event.data.address);
 						//$("#search_form").submit();
 					});
 					place_a.appendTo(place_li);
