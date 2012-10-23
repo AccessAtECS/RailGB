@@ -20,7 +20,7 @@
 			</div>
 			<div data-role="content" id="search_form_div">
 				<div style="text-align:center">
-					<img src="/public/img/railgb_36.png"/><h2 style="display:inline;font-size:2.4em">RailGB</h2>
+					<img src="/public/img/railgb_36.png" class='logo' /><h2 style="display:inline;font-size:2.4em">RailGB</h2>
 				</div>
 				<h3>Search Accessible Tube Stations</h3>
 						  <form action="/public/ajax/tube.php" method="get" data-ajax="false" id="search_form">
@@ -48,7 +48,7 @@
 							  		</ul>
 							  		<br/>
 							  		<div id="filter_config_div">
-								  		<a data-role="button" data-transition="slideup" href="#filter_div" data-theme="b" data-icon="gear" data-mini="true" data-iconpos="right">Config Filter</a>
+								  		<a data-role="button" data-transition="slideup" href="#filter_div" data-theme="b" data-icon="gear" data-mini="true" data-iconpos="right">Filter Options</a>
 							  		</div>
 							  		
 							  </div>

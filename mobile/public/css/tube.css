@@ -33,3 +33,8 @@ body {
 .help-nav .ui-btn-inner{overflow: visible;}
 #nav_map_a .ui-btn-inner{overflow: visible;}
 #map_footer_div .ui-btn-inner, #tubelist_footer_div .ui-btn-inner{overflow:visible;}
+
+
+.logo {
+	padding-right: 15px;
+}
