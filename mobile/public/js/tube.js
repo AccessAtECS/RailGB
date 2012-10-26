@@ -202,8 +202,9 @@ function displayStations(address, addName, callback)
 			{'address': address },
 			function(data, status) 
 			{ 
-				var lat = data[0].geometry.location.Xa;
-				var lng = data[0].geometry.location.Ya;
+				//The geocoder service has changed since 22 oct 2012
+				var lat = data[0].geometry.location.Ya;
+				var lng = data[0].geometry.location.Za;
 				var latlng = new google.maps.LatLng(lat,lng,true);
 				//draw a circle
 				if (circle != null) {
@@ -579,6 +580,7 @@ $('#search_div').live('pageinit',function(event){
         }
     });
     
+    //Didn't use input submit button because the submit path is the same page
     $("#search_a").click(function(){
 	    newSearch = true;
     })
@@ -616,11 +618,12 @@ $("#search_form").live('submit',function(e){
 
     //prevent the default submission of the form
     e.preventDefault();
-
+    newSearch = true;
     //run an AJAX post request to your server-side script, $this.serialize() is the data from your form being added to the request
-    var address = $("#address").val();
-    var addName = $("#addName").val();
-    displayStations(address,addName,afterSearch);
+    $.mobile.changePage("#tubemap_div",{changeHash:true});
+    //var address = $("#address").val();
+    //var addName = $("#addName").val();
+    //displayStations(address,addName,afterSearch);
 });
 
 //$('#tubemap_div').live('pageinit',function(event){
@@ -631,6 +634,7 @@ $("#search_form").live('submit',function(e){
 //});
 					
 $('#tubemap_div').live('pageshow', function(event) {
+	//page show
 	if(map == null)
 	{
 		//console.log("map null");
@@ -644,7 +648,9 @@ $('#tubemap_div').live('pageshow', function(event) {
 	
 	if(newSearch == true)
 	{
-		$("#search_form").submit();
+		var address = $("#address").val();
+		var addName = $("#addName").val();
+		displayStations(address,addName,afterSearch);
 	}
 });
 

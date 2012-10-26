@@ -3,7 +3,7 @@
 	<head>
 		<title>Tube London - Accessible London Underground Map</title>
 		<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyCOcZ0jBwaWOfoECgTbyD-VhqTVk4j-hJ8&sensor=false"></script>
 		<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
 		<?php
 			$path = $_SERVER['DOCUMENT_ROOT'];
