@@ -1,0 +1,970 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <http://www.railgb.org.uk/ns/2012/9/tubefacility.owl> .
+
+<http://www.railgb.org.uk/ns/2012/9/tubefacility.owl> rdf:type owl:Ontology ;
+                                                      
+                                                      rdfs:label "London Tube station ontology v0.1"^^rdf:PlainLiteral ;
+                                                      
+                                                      rdfs:comment "This is an ontology to describe the facilities available in London Tube stations. This ontology also describe the accessibility of the tube station to different parties, such as wheelchair users, step-free people, etc. Current version v0.1"^^rdf:PlainLiteral .
+
+
+#################################################################
+#
+#    Annotation properties
+#
+#################################################################
+
+
+rdfs:label rdf:type owl:AnnotationProperty .
+
+
+
+rdfs:comment rdf:type owl:AnnotationProperty .
+
+
+
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasAccessibleToilet
+
+:hasAccessibleToilet rdf:type owl:ObjectProperty ;
+                     
+                     rdfs:label "Has Accessible Toilet" ;
+                     
+                     rdfs:comment "A station has accessible toilet" ;
+                     
+                     rdfs:subPropertyOf :hasToilets .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasBabyChange
+
+:hasBabyChange rdf:type owl:ObjectProperty ;
+               
+               rdfs:label "Has Baby Change" ,
+                          "A station has baby change" ;
+               
+               rdfs:subPropertyOf :hasToilets .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasBridge
+
+:hasBridge rdf:type owl:ObjectProperty ;
+           
+           rdfs:label "Has Bridge" ;
+           
+           rdfs:comment "A station has bridge" ;
+           
+           rdfs:range :Bridge ;
+           
+           rdfs:domain :TubeStation ;
+           
+           rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasCarPark
+
+:hasCarPark rdf:type owl:ObjectProperty ;
+            
+            rdfs:label "Has Car Park" ;
+            
+            rdfs:comment "A station has car park" ;
+            
+            rdfs:range :CarPark ;
+            
+            rdfs:domain :TubeStation ;
+            
+            rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasCashMachines
+
+:hasCashMachines rdf:type owl:ObjectProperty ;
+                 
+                 rdfs:label "Has Cash Machines" ;
+                 
+                 rdfs:comment "A station has cash machines" ;
+                 
+                 rdfs:range :CashMachines ;
+                 
+                 rdfs:domain :TubeStation ;
+                 
+                 rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasDisabledCarPark
+
+:hasDisabledCarPark rdf:type owl:ObjectProperty ;
+                    
+                    rdfs:label "Has Disabled Car Park" ;
+                    
+                    rdfs:comment "A station has disabled car park" ;
+                    
+                    rdfs:range :DisabledCarPark ;
+                    
+                    rdfs:domain :TubeStation ;
+                    
+                    rdfs:subPropertyOf :hasCarPark .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasDrinkVendingMachine
+
+:hasDrinkVendingMachine rdf:type owl:ObjectProperty ;
+                        
+                        rdfs:label "Has Drink Vending Machine" ;
+                        
+                        rdfs:comment "A station has drink vending machine" ;
+                        
+                        rdfs:range :DrinkVendingMachine ;
+                        
+                        rdfs:domain :TubeStation ;
+                        
+                        owl:propertyDisjointWith :hasSnackVendingMaching ;
+                        
+                        rdfs:subPropertyOf :hasVendingMachines .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasEscalators
+
+:hasEscalators rdf:type owl:ObjectProperty ;
+               
+               rdfs:label "Has Escalators" ;
+               
+               rdfs:comment "A station has escalators" ;
+               
+               rdfs:range :Escalators ;
+               
+               rdfs:domain :TubeStation ;
+               
+               rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasFacility
+
+:hasFacility rdf:type owl:ObjectProperty ;
+             
+             rdfs:range :Facility ;
+             
+             rdfs:domain :TubeStation .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasFemaleToilet
+
+:hasFemaleToilet rdf:type owl:ObjectProperty ;
+                 
+                 rdfs:label "Has Female Toilets" ;
+                 
+                 rdfs:subPropertyOf :hasToilets .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasGates
+
+:hasGates rdf:type owl:ObjectProperty ;
+          
+          rdfs:label "Has Gates" ;
+          
+          rdfs:comment "A station has gates" ;
+          
+          rdfs:range :Gates ;
+          
+          rdfs:domain :TubeStation ;
+          
+          rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasHelpPoints
+
+:hasHelpPoints rdf:type owl:ObjectProperty ;
+               
+               rdfs:label "Has Help Points" ;
+               
+               rdfs:comment "A station has help points" ;
+               
+               rdfs:range :HelpPoints ;
+               
+               rdfs:domain :TubeStation ;
+               
+               rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasHelpPointsInTicketHalls
+
+:hasHelpPointsInTicketHalls rdf:type owl:ObjectProperty ;
+                            
+                            rdfs:label "Has Help Points in Ticket Halls" ;
+                            
+                            rdfs:comment "A station has help points in ticket halls" ;
+                            
+                            rdfs:range :HelpPointInTicketHalls ;
+                            
+                            rdfs:domain :TubeStation ;
+                            
+                            rdfs:subPropertyOf :hasHelpPoints .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasHelpPointsOnPlatforms
+
+:hasHelpPointsOnPlatforms rdf:type owl:ObjectProperty ;
+                          
+                          rdfs:label "Has Help Points On Platforms" ;
+                          
+                          rdfs:comment "A station has help points on platforms" ;
+                          
+                          rdfs:range :HelpPointOnPlatforms ;
+                          
+                          rdfs:domain :TubeStation ;
+                          
+                          rdfs:subPropertyOf :hasHelpPoints .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasLifts
+
+:hasLifts rdf:type owl:ObjectProperty ;
+          
+          rdfs:label "Has Lifts" ;
+          
+          rdfs:comment "A station has lifts" ;
+          
+          rdfs:range :Lifts ;
+          
+          rdfs:domain :TubeStation ;
+          
+          rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasMaleToilet
+
+:hasMaleToilet rdf:type owl:ObjectProperty ;
+               
+               rdfs:label "Has Male Toilets" ;
+               
+               rdfs:comment "A station has male toilets" ;
+               
+               rdfs:subPropertyOf :hasToilets .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasPayphones
+
+:hasPayphones rdf:type owl:ObjectProperty ;
+              
+              rdfs:label "Has Payphones" ;
+              
+              rdfs:comment "A station has payphones" ;
+              
+              rdfs:range :Payphones ;
+              
+              rdfs:domain :TubeStation ;
+              
+              rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasPhotoBooths
+
+:hasPhotoBooths rdf:type owl:ObjectProperty ;
+                
+                rdfs:label "Has Photo Booths" ;
+                
+                rdfs:comment "A station has photo booths" ;
+                
+                rdfs:range :PhotoBooths ;
+                
+                rdfs:domain :TubeStation ;
+                
+                rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasSnackVendingMaching
+
+:hasSnackVendingMaching rdf:type owl:ObjectProperty ;
+                        
+                        rdfs:label "Has Snack Vending Machine" ;
+                        
+                        rdfs:comment "A station has snack vending machine" ;
+                        
+                        rdfs:range :SnacksVendingMachine ;
+                        
+                        rdfs:domain :TubeStation ;
+                        
+                        rdfs:subPropertyOf :hasVendingMachines .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasTicketHalls
+
+:hasTicketHalls rdf:type owl:ObjectProperty ;
+                
+                rdfs:label "Has Ticket Halls" ;
+                
+                rdfs:comment "A station has ticket halls." ;
+                
+                rdfs:range :TicketHalls ;
+                
+                rdfs:domain :TubeStation ;
+                
+                rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasToilets
+
+:hasToilets rdf:type owl:ObjectProperty ;
+            
+            rdfs:label "Has Toilets" ;
+            
+            rdfs:comment "A station has toilets" ;
+            
+            rdfs:range :Toilets ;
+            
+            rdfs:domain :TubeStation ;
+            
+            rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasVendingMachines
+
+:hasVendingMachines rdf:type owl:ObjectProperty ;
+                    
+                    rdfs:label "Has Vending Machines" ;
+                    
+                    rdfs:comment "A station has vending machines" ;
+                    
+                    rdfs:domain :TubeStation ;
+                    
+                    rdfs:range :VendingMachines ;
+                    
+                    rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasWaitingRoom
+
+:hasWaitingRoom rdf:type owl:ObjectProperty ;
+                
+                rdfs:domain :TubeStation ;
+                
+                rdfs:range :WaitingRoom ;
+                
+                rdfs:subPropertyOf :hasFacility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasWiFi
+
+:hasWiFi rdf:type owl:ObjectProperty ;
+         
+         rdfs:domain :TubeStation ;
+         
+         rdfs:range :WiFi ;
+         
+         rdfs:subPropertyOf :hasFacility .
+
+
+
+
+
+#################################################################
+#
+#    Data properties
+#
+#################################################################
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#facilityAvailable
+
+:facilityAvailable rdf:type owl:DatatypeProperty ;
+                   
+                   rdfs:label "Availability of the facility" ;
+                   
+                   rdfs:domain :Facility ;
+                   
+                   owl:propertyDisjointWith :facilityQuantity ;
+                   
+                   rdfs:range xsd:boolean .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#facilityQuantity
+
+:facilityQuantity rdf:type owl:DatatypeProperty ;
+                  
+                  rdfs:label "Quantity of the facility" ;
+                  
+                  rdfs:domain :Facility ;
+                  
+                  rdfs:range xsd:int .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasAddress
+
+:hasAddress rdf:type owl:DatatypeProperty ;
+            
+            rdfs:label "Has Address" ;
+            
+            rdfs:comment "The address of a tube station" ;
+            
+            rdfs:domain :TubeStation ;
+            
+            rdfs:range xsd:string .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#hasPhone
+
+:hasPhone rdf:type owl:DatatypeProperty ;
+          
+          rdfs:label "Has Phone" ;
+          
+          rdfs:comment "The telephone number of a station" ;
+          
+          rdfs:domain :TubeStation ;
+          
+          rdfs:range xsd:string .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#isBlindAccessibleStation
+
+:isBlindAccessibleStation rdf:type owl:DatatypeProperty ;
+                          
+                          rdfs:domain :TubeStation ;
+                          
+                          rdfs:range xsd:boolean .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#isStepFreeStation
+
+:isStepFreeStation rdf:type owl:DatatypeProperty ;
+                   
+                   rdfs:label "Is Station Step Free" ;
+                   
+                   rdfs:domain :TubeStation ;
+                   
+                   rdfs:range xsd:boolean .
+
+
+
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#AccessibleToilet
+
+:AccessibleToilet rdf:type owl:Class ;
+                  
+                  rdfs:label "Accessible Toilet" ;
+                  
+                  rdfs:subClassOf :Toilets .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#BabyChange
+
+:BabyChange rdf:type owl:Class ;
+            
+            rdfs:label "Baby Change" ;
+            
+            rdfs:subClassOf :Toilets .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#Bridge
+
+:Bridge rdf:type owl:Class ;
+        
+        rdfs:label "Bridge" ;
+        
+        rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#CarPark
+
+:CarPark rdf:type owl:Class ;
+         
+         rdfs:label "Car park" ;
+         
+         rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#CashMachines
+
+:CashMachines rdf:type owl:Class ;
+              
+              rdfs:label "Cash Machines" ;
+              
+              rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#DisabledCarPark
+
+:DisabledCarPark rdf:type owl:Class ;
+                 
+                 rdfs:label "Disabled Car park" ;
+                 
+                 rdfs:subClassOf :CarPark .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#DrinkVendingMachine
+
+:DrinkVendingMachine rdf:type owl:Class ;
+                     
+                     rdfs:subClassOf :VendingMachines .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#Escalators
+
+:Escalators rdf:type owl:Class ;
+            
+            rdfs:label "Escalators" ;
+            
+            rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#Facility
+
+:Facility rdf:type owl:Class ;
+          
+          rdfs:label "Tube Station Facility" ;
+          
+          owl:disjointWith :TubeStation ;
+          
+          rdfs:comment "The super class for all facilities available in a tube station" .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#FemaleToilet
+
+:FemaleToilet rdf:type owl:Class ;
+              
+              rdfs:label "Female Toilet" ;
+              
+              rdfs:subClassOf :Toilets .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#Gates
+
+:Gates rdf:type owl:Class ;
+       
+       rdfs:label "Gates" ;
+       
+       rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#HelpPointInTicketHalls
+
+:HelpPointInTicketHalls rdf:type owl:Class ;
+                        
+                        rdfs:label "Help Point in Ticket Halls" ;
+                        
+                        rdfs:subClassOf :HelpPoints .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#HelpPointOnPlatforms
+
+:HelpPointOnPlatforms rdf:type owl:Class ;
+                      
+                      rdfs:subClassOf :HelpPoints .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#HelpPoints
+
+:HelpPoints rdf:type owl:Class ;
+            
+            rdfs:label "Help Points" ;
+            
+            rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#Lifts
+
+:Lifts rdf:type owl:Class ;
+       
+       rdfs:label "Lifts" ;
+       
+       rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#MaleToilet
+
+:MaleToilet rdf:type owl:Class ;
+            
+            rdfs:label "Male Toilet" ;
+            
+            rdfs:subClassOf :Toilets .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#Payphones
+
+:Payphones rdf:type owl:Class ;
+           
+           rdfs:label "Payphones" ;
+           
+           rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#PhotoBooths
+
+:PhotoBooths rdf:type owl:Class ;
+             
+             rdfs:label "Photo Booths" ;
+             
+             rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#SnacksVendingMachine
+
+:SnacksVendingMachine rdf:type owl:Class ;
+                      
+                      rdfs:subClassOf :VendingMachines .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#TicketHalls
+
+:TicketHalls rdf:type owl:Class ;
+             
+             rdfs:label "Ticket Halls" ;
+             
+             rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#Toilets
+
+:Toilets rdf:type owl:Class ;
+         
+         rdfs:label "Toilets" ;
+         
+         rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#TubeStation
+
+:TubeStation rdf:type owl:Class ;
+             
+             rdfs:label "London Tube station" .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#VendingMachines
+
+:VendingMachines rdf:type owl:Class ;
+                 
+                 rdfs:label "Vending Machines" ;
+                 
+                 rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#WaitingRoom
+
+:WaitingRoom rdf:type owl:Class ;
+             
+             rdfs:label "Waiting Room" ;
+             
+             rdfs:subClassOf :Facility .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#WiFi
+
+:WiFi rdf:type owl:Class ;
+      
+      rdfs:label "WiFi" ;
+      
+      rdfs:subClassOf :Facility .
+
+
+
+
+
+#################################################################
+#
+#    Individuals
+#
+#################################################################
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#actonTownTubeStation
+
+:actonTownTubeStation rdf:type :TubeStation ,
+                               owl:NamedIndividual ;
+                      
+                      rdfs:label "Acton Town Tube Station" ;
+                      
+                      :hasPhone "0845 330 9875" ;
+                      
+                      :hasAddress "Acton Town Station, London Underground Ltd., Gunnersbury Lane, London, W3 8HN" ;
+                      
+                      :hasHelpPointsInTicketHalls :actonTownTubeStationHelpPointInTicketHalls ;
+                      
+                      :hasHelpPointsOnPlatforms :actonTownTubeStationHelpPointOnPlatforms .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#actonTownTubeStationHelpPointInTicketHalls
+
+:actonTownTubeStationHelpPointInTicketHalls rdf:type :HelpPointInTicketHalls ,
+                                                     owl:NamedIndividual ;
+                                            
+                                            :facilityQuantity "0"^^xsd:int ;
+                                            
+                                            :facilityAvailable "false"^^xsd:boolean .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#actonTownTubeStationHelpPointOnPlatforms
+
+:actonTownTubeStationHelpPointOnPlatforms rdf:type :HelpPointOnPlatforms ,
+                                                   owl:NamedIndividual ;
+                                          
+                                          :facilityQuantity "0"^^xsd:int ;
+                                          
+                                          :facilityAvailable "false"^^xsd:boolean .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#angelTubeStation
+
+:angelTubeStation rdf:type :TubeStation ,
+                           owl:NamedIndividual ;
+                  
+                  rdfs:label "Angel Tube Station" ;
+                  
+                  :hasAddress "Angel Station, London Underground Ltd., City Rd, London, EC1V 1NE" ;
+                  
+                  :hasPhone "0845 330 9879" ;
+                  
+                  :hasHelpPointsInTicketHalls :angelTubeStationHelpPointInTicketHalls ;
+                  
+                  :hasHelpPointsOnPlatforms :angelTubeStationHelpPointOnPlatforms .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#angelTubeStationHelpPointInTicketHalls
+
+:angelTubeStationHelpPointInTicketHalls rdf:type :HelpPointInTicketHalls ,
+                                                 owl:NamedIndividual ;
+                                        
+                                        :facilityQuantity "1"^^xsd:int ;
+                                        
+                                        :facilityAvailable "true"^^xsd:boolean .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#angelTubeStationHelpPointOnPlatforms
+
+:angelTubeStationHelpPointOnPlatforms rdf:type :HelpPointOnPlatforms ,
+                                               owl:NamedIndividual ;
+                                      
+                                      :facilityQuantity "5"^^xsd:int ;
+                                      
+                                      :facilityAvailable "true"^^xsd:boolean .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#arsenalTubeStation
+
+:arsenalTubeStation rdf:type :TubeStation ,
+                             owl:NamedIndividual ;
+                    
+                    rdfs:label "Arsenal Tube Station" ;
+                    
+                    :hasPhone "0845 330 9875" ;
+                    
+                    :hasAddress "Arsenal Station, London Underground Ltd., Highbury Hill, London, N5 1LP" ;
+                    
+                    :hasHelpPointsInTicketHalls :arsenalTubeStationHelpPointInTicketHalls ;
+                    
+                    :hasHelpPointsOnPlatforms :arsenalTubeStationHelpPointOnPlatforms .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#arsenalTubeStationHelpPointInTicketHalls
+
+:arsenalTubeStationHelpPointInTicketHalls rdf:type :HelpPointInTicketHalls ,
+                                                   owl:NamedIndividual ;
+                                          
+                                          :facilityQuantity "0"^^xsd:int ;
+                                          
+                                          :facilityAvailable "false"^^xsd:boolean .
+
+
+
+###  http://www.railgb.org.uk/ns/2012/9/tubefacility.owl#arsenalTubeStationHelpPointOnPlatforms
+
+:arsenalTubeStationHelpPointOnPlatforms rdf:type :HelpPointOnPlatforms ,
+                                                 owl:NamedIndividual ;
+                                        
+                                        :facilityQuantity "4"^^xsd:int ;
+                                        
+                                        :facilityAvailable "true"^^xsd:boolean .
+
+
+
+
+
+#################################################################
+#
+#    General axioms
+#
+#################################################################
+
+
+[ rdf:type owl:AllDisjointProperties ;
+  owl:members ( :hasAccessibleToilet
+                :hasBabyChange
+                :hasFemaleToilet
+                :hasMaleToilet
+              )
+] .
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Bridge
+                :CarPark
+                :CashMachines
+                :Escalators
+                :Gates
+                :HelpPoints
+                :Lifts
+                :Payphones
+                :PhotoBooths
+                :TicketHalls
+                :Toilets
+                :VendingMachines
+                :WaitingRoom
+                :WiFi
+              )
+] .
+[ rdf:type owl:AllDisjointProperties ;
+  owl:members ( :hasBridge
+                :hasCarPark
+                :hasCashMachines
+                :hasEscalators
+                :hasGates
+                :hasHelpPoints
+                :hasLifts
+                :hasPayphones
+                :hasPhotoBooths
+                :hasTicketHalls
+                :hasToilets
+                :hasVendingMachines
+                :hasWaitingRoom
+                :hasWiFi
+              )
+] .
+
+
+
+
+
+#################################################################
+#
+#    Rules
+#
+#################################################################
+
+
+<urn:swrl#station> rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+<urn:swrl#hpticket> rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+<urn:swrl#hpplatform> rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+[ rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+  <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                          rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                     rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                 <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasHelpPointsInTicketHalls ;
+                                                                 <http://www.w3.org/2003/11/swrl#argument2> <urn:swrl#hpticket> ;
+                                                                 <http://www.w3.org/2003/11/swrl#argument1> <urn:swrl#station>
+                                                               ] ;
+                                                     rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                                      rdf:rest rdf:nil ;
+                                                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                                                  <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean ;
+                                                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :facilityAvailable ;
+                                                                                                  <http://www.w3.org/2003/11/swrl#argument1> <urn:swrl#hpticket>
+                                                                                                ]
+                                                                                    ] ;
+                                                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                                                       <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean ;
+                                                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :facilityAvailable ;
+                                                                                       <http://www.w3.org/2003/11/swrl#argument1> <urn:swrl#hpplatform>
+                                                                                     ]
+                                                                         ] ;
+                                                                rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                            <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasHelpPointsOnPlatforms ;
+                                                                            <http://www.w3.org/2003/11/swrl#argument2> <urn:swrl#hpplatform> ;
+                                                                            <http://www.w3.org/2003/11/swrl#argument1> <urn:swrl#station>
+                                                                          ]
+                                                              ]
+                                                   ] ;
+                                          rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                      <http://www.w3.org/2003/11/swrl#classPredicate> :TubeStation ;
+                                                      <http://www.w3.org/2003/11/swrl#argument1> <urn:swrl#station>
+                                                    ]
+                                        ] ;
+  <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                          rdf:rest rdf:nil ;
+                                          rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
+                                                      <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean ;
+                                                      <http://www.w3.org/2003/11/swrl#propertyPredicate> :isBlindAccessibleStation ;
+                                                      <http://www.w3.org/2003/11/swrl#argument1> <urn:swrl#station>
+                                                    ]
+                                        ]
+] .
+
+###  Generated by the OWL API (version 3.1.0.20069) http://owlapi.sourceforge.net
+
