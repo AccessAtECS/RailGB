@@ -203,9 +203,9 @@ function displayStations(address, addName, callback)
 			function(data, status) 
 			{ 
 				//The geocoder service has changed since 22 oct 2012
-				var lat = data[0].geometry.location.Ya;
-				var lng = data[0].geometry.location.Za;
-				var latlng = new google.maps.LatLng(lat,lng,true);
+				//var lat = data[0].geometry.location.Ya;
+				//var lng = data[0].geometry.location.Za;
+				var latlng = data[0].geometry.location;
 				//draw a circle
 				if (circle != null) {
 				    circle.setVisible(false);
